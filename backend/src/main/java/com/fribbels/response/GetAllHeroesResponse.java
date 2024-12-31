@@ -1,18 +1,28 @@
 package com.fribbels.response;
 
 import com.fribbels.model.Hero;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.util.List;
 
-@Setter
-@Getter
-@Builder
-@ToString
 public class GetAllHeroesResponse extends Response {
 
-    private final List<Hero> heroes;
+    private List<Hero> heroes;
+
+    public GetAllHeroesResponse(List<Hero> heroes) {
+        this.heroes = heroes;
+    }
+
+    public List<Hero> getHeroes() {
+        return heroes;
+    }
+
+    public void setHeroes(List<Hero> heroes) {
+        this.heroes = heroes;
+    }
+
+    @Override
+    public String toString() {
+        return "GetAllHeroesResponse [heroes=" + heroes + "]";
+    }
+
 }

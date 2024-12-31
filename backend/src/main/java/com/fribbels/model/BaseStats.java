@@ -1,15 +1,9 @@
 package com.fribbels.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+public record BaseStats(HeroStats lv50FiveStarFullyAwakened, HeroStats lv60SixStarFullyAwakened, HeroSkills skills) {
 
-@Getter
-@Builder
-@ToString
-public class BaseStats {
-
-    private final HeroStats lv50FiveStarFullyAwakened;
-    private final HeroStats lv60SixStarFullyAwakened;
-    private final HeroSkills skills;
+    @Override
+    public String toString() {
+        return "BaseStats []";
+    }
 }

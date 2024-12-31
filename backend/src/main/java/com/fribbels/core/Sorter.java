@@ -8,6 +8,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class Sorter {
+    
+    private Sorter() {
+    }
 
     public static void sortHeroes(final HeroStats[] data, final OptimizationColumn column, final SortOrder order) {
         System.out.println("SORTING HEROES BY " + column + " " + order);

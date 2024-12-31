@@ -1,16 +1,22 @@
 package com.fribbels.request;
 
 import com.fribbels.model.Request;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
-@Setter
-@Getter
-@Builder
-@ToString
 public class IdRequest extends Request {
 
     private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "IdRequest [id=" + id + "]";
+    }
+
 }

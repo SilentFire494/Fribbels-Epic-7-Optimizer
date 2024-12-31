@@ -1,11 +1,7 @@
 package com.fribbels.enums;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
 public enum OptimizationColumn {
 
     @SerializedName("atk") ATK,

@@ -1,19 +1,12 @@
 package com.fribbels;
 
 import com.aparapi.Kernel;
-import com.aparapi.ProfileInfo;
-import com.aparapi.ProfileReport;
-import com.aparapi.Range;
-import com.aparapi.device.Device;
-import com.aparapi.exception.QueryFailedException;
 import com.aparapi.internal.kernel.KernelManager;
-import com.aparapi.internal.opencl.OpenCLPlatform;
 import com.fribbels.core.StatCalculator;
 import com.fribbels.db.ArtifactStatsDb;
 import com.fribbels.db.BaseStatsDb;
 import com.fribbels.db.HeroDb;
 import com.fribbels.db.ItemDb;
-import com.fribbels.db.OptimizationDb;
 import com.fribbels.handler.HeroesRequestHandler;
 import com.fribbels.handler.ItemsRequestHandler;
 import com.fribbels.handler.OcrRequestHandler;
@@ -23,9 +16,6 @@ import com.sun.net.httpserver.HttpServer;
 
 import java.net.BindException;
 import java.net.InetSocketAddress;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,7 +27,6 @@ public class Main {
     private static final BaseStatsDb baseStatsDb = new BaseStatsDb();
     private static final HeroDb heroDb = new HeroDb(baseStatsDb);
     private static final ItemDb itemDb = new ItemDb(heroDb);
-    private static final OptimizationDb optimizationDb = new OptimizationDb();
 
     public static boolean interrupt = false;
     public static int THREADS = 10;
@@ -84,7 +73,7 @@ public class Main {
         server.start();
     }
 
-    public static void mainGpuDebugger(String[] args) throws Exception {
+    public static void mainGpuDebugger() {
         System.out.println("** GPU DEBUGGER **");
         System.out.println("** Best device: **\n" + KernelManager.instance().bestDevice());
 

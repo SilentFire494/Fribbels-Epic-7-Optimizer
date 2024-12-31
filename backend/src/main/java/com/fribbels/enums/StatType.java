@@ -1,11 +1,7 @@
 package com.fribbels.enums;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
 public enum StatType {
 
     @SerializedName("Attack") ATTACK (0),
@@ -22,4 +18,12 @@ public enum StatType {
     @SerializedName("Dac") DAC (11);
 
     private int index;
+
+    private StatType(int index) {
+        this.index = index;
+    }
+
+    public int getIndex() {
+        return index;
+    }
 }

@@ -1,10 +1,6 @@
 package com.fribbels.db;
 
-import com.fribbels.core.SpecialStats;
 import com.fribbels.model.ArtifactStats;
-import com.fribbels.model.BaseStats;
-import com.fribbels.model.HeroStats;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,28 +16,19 @@ public class ArtifactStatsDb {
     public ArtifactStats getArtifactStats(final String name, final int level) {
         if (artifactStatsByName.containsKey(name)) {
             final ArtifactStats base = artifactStatsByName.get(name);
-            final float maxAttack = base.getAttack() * 13;
-            final float maxHealth = base.getHealth() * 13;
+            final float maxAttack = base.attack() * 13;
+            final float maxHealth = base.health() * 13;
 
-            final float leveledAttack = (maxAttack - base.getAttack()) * (level / 30f) + base.getAttack();
-            final float leveledHealth = (maxHealth - base.getHealth()) * (level / 30f) + base.getHealth();
+            final float leveledAttack = (maxAttack - base.attack()) * (level / 30f) + base.attack();
+            final float leveledHealth = (maxHealth - base.health()) * (level / 30f) + base.health();
 
-            return ArtifactStats
-                    .builder()
-                    .attack(leveledAttack)
-                    .health(leveledHealth)
-                    .build();
+            return new ArtifactStats(leveledAttack, leveledHealth);
         }
 
-        return ArtifactStats
-                .builder()
-                .attack(0f)
-                .health(0f)
-                .build();
+        return new ArtifactStats(0f, 0f);
     }
 
     public void setArtifactStatsByName(final Map<String, ArtifactStats> artifactStatsByName) {
         this.artifactStatsByName = artifactStatsByName;
     }
 }
-

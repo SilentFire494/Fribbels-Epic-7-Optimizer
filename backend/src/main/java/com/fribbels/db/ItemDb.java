@@ -5,12 +5,8 @@ import com.fribbels.model.AugmentedStats;
 import com.fribbels.model.Hero;
 import com.fribbels.model.Item;
 import org.apache.commons.lang3.StringUtils;
-
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ItemDb {
 
@@ -26,7 +22,7 @@ public class ItemDb {
         final List<Item> validItems = newItems.stream()
                 .filter(this::isValid)
                 .map(this::calculateWss)
-                .collect(Collectors.toList());
+                .toList();
 
         items.addAll(validItems);
     }
@@ -35,7 +31,7 @@ public class ItemDb {
         final List<Item> validItems = newItems.stream()
                 .filter(this::isValid)
                 .map(this::calculateWss)
-                .collect(Collectors.toList());
+                .toList();
 
         items = validItems;
     }
@@ -43,12 +39,12 @@ public class ItemDb {
     public void replaceItems(final Item newItem) {
         final List<Item> replacing = items.stream()
                 .filter(item -> !StringUtils.equals(item.getId(), newItem.getId()))
-                .collect(Collectors.toList());
+                .toList();
         replacing.add(newItem);
 
         replacing.stream()
-                 .filter(this::isValid)
-                 .map(this::calculateWss);
+                .filter(this::isValid)
+                .map(this::calculateWss);
 
         items = replacing;
     }
@@ -69,57 +65,52 @@ public class ItemDb {
         final double defValue = 4.99 / 31;
         final double hpValue = 3.09 / 174;
 
-        double wssValue =
-                stats.getAttackPercent() +
-                        stats.getDefensePercent() +
-                        stats.getHealthPercent() +
-                        stats.getEffectResistance() +
-                        stats.getEffectiveness() +
-                        stats.getSpeed() * (8.0/4.0) +
-                        stats.getCritDamage() * (8.0/7.0) +
-                        stats.getCritRate() * (8.0/5.0) +
-                        stats.getAttack() * atkValue +
-                        stats.getDefense() * defValue +
-                        stats.getHealth() * hpValue;
+        double wssValue = stats.getAttackPercent() +
+                stats.getDefensePercent() +
+                stats.getHealthPercent() +
+                stats.getEffectResistance() +
+                stats.getEffectiveness() +
+                stats.getSpeed() * (8.0 / 4.0) +
+                stats.getCritDamage() * (8.0 / 7.0) +
+                stats.getCritRate() * (8.0 / 5.0) +
+                stats.getAttack() * atkValue +
+                stats.getDefense() * defValue +
+                stats.getHealth() * hpValue;
 
-        double reforgedWssValue =
-                reforgedStats.getAttackPercent() +
-                        reforgedStats.getDefensePercent() +
-                        reforgedStats.getHealthPercent() +
-                        reforgedStats.getEffectResistance() +
-                        reforgedStats.getEffectiveness() +
-                        reforgedStats.getSpeed() * (8.0/4.0) +
-                        reforgedStats.getCritDamage() * (8.0/7.0) +
-                        reforgedStats.getCritRate() * (8.0/5.0) +
-                        reforgedStats.getAttack() * atkValue +
-                        reforgedStats.getDefense() * defValue +
-                        reforgedStats.getHealth() * hpValue;
-
-        double dpsWssValue =
-                reforgedStats.getAttackPercent() +
-                        reforgedStats.getSpeed() * (8.0/4.0) +
-                        reforgedStats.getCritDamage() * (8.0/7.0) +
-                        reforgedStats.getCritRate() * (8.0/5.0) +
-                        reforgedStats.getAttack() * atkValue;
-
-        double supportWssValue =
+        double reforgedWssValue = reforgedStats.getAttackPercent() +
                 reforgedStats.getDefensePercent() +
-                        reforgedStats.getHealthPercent() +
-                        reforgedStats.getEffectResistance() +
-                        reforgedStats.getSpeed() * (8.0/4.0) +
-                        reforgedStats.getDefense() * defValue +
-                        reforgedStats.getHealth() * hpValue;
+                reforgedStats.getHealthPercent() +
+                reforgedStats.getEffectResistance() +
+                reforgedStats.getEffectiveness() +
+                reforgedStats.getSpeed() * (8.0 / 4.0) +
+                reforgedStats.getCritDamage() * (8.0 / 7.0) +
+                reforgedStats.getCritRate() * (8.0 / 5.0) +
+                reforgedStats.getAttack() * atkValue +
+                reforgedStats.getDefense() * defValue +
+                reforgedStats.getHealth() * hpValue;
 
-        double combatWssValue =
-                reforgedStats.getAttackPercent() +
-                        reforgedStats.getDefensePercent() +
-                        reforgedStats.getHealthPercent() +
-                        reforgedStats.getSpeed() * (8.0/4.0) +
-                        reforgedStats.getCritDamage() * (8.0/7.0) +
-                        reforgedStats.getCritRate() * (8.0/5.0) +
-                        reforgedStats.getAttack() * atkValue +
-                        reforgedStats.getDefense() * defValue +
-                        reforgedStats.getHealth() * hpValue;
+        double dpsWssValue = reforgedStats.getAttackPercent() +
+                reforgedStats.getSpeed() * (8.0 / 4.0) +
+                reforgedStats.getCritDamage() * (8.0 / 7.0) +
+                reforgedStats.getCritRate() * (8.0 / 5.0) +
+                reforgedStats.getAttack() * atkValue;
+
+        double supportWssValue = reforgedStats.getDefensePercent() +
+                reforgedStats.getHealthPercent() +
+                reforgedStats.getEffectResistance() +
+                reforgedStats.getSpeed() * (8.0 / 4.0) +
+                reforgedStats.getDefense() * defValue +
+                reforgedStats.getHealth() * hpValue;
+
+        double combatWssValue = reforgedStats.getAttackPercent() +
+                reforgedStats.getDefensePercent() +
+                reforgedStats.getHealthPercent() +
+                reforgedStats.getSpeed() * (8.0 / 4.0) +
+                reforgedStats.getCritDamage() * (8.0 / 7.0) +
+                reforgedStats.getCritRate() * (8.0 / 5.0) +
+                reforgedStats.getAttack() * atkValue +
+                reforgedStats.getDefense() * defValue +
+                reforgedStats.getHealth() * hpValue;
 
         item.setWss((int) Math.round(wssValue));
         item.setReforgedWss((int) Math.round(reforgedWssValue));
@@ -139,15 +130,7 @@ public class ItemDb {
     public List<Item> getItemsById(final List<String> ids) {
         return ids.stream()
                 .map(this::getItemById)
-                .collect(Collectors.toList());
-    }
-
-    public void editItem(final Item item) {
-
-    }
-
-    public void lockItem(final Item item) {
-
+                .toList();
     }
 
     public void unequipItem(final String id) {
@@ -175,7 +158,8 @@ public class ItemDb {
     public void deleteItem(final String id) {
         final Item existingItem = getItemById(id);
 
-        if (existingItem == null) return;
+        if (existingItem == null)
+            return;
 
         final String heroId = existingItem.getEquippedById();
         final Hero hero = heroDb.getHeroById(heroId);
@@ -206,7 +190,6 @@ public class ItemDb {
             System.out.println("PREV ITEM" + previousItem);
             unequipItem(previousItem.getId());
         }
-
 
         hero.getEquipment().put(item.getGear(), item);
         item.setEquippedById(heroId);

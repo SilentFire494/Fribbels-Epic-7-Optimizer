@@ -2,15 +2,10 @@ package com.fribbels.handler;
 
 import com.fribbels.Main;
 import com.fribbels.core.StatCalculator;
-import com.fribbels.request.BuildsRequest;
-import com.fribbels.request.HeroesRequest;
 import com.fribbels.request.SetSettingsRequest;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
-import java.io.OutputStream;
 
 public class SystemRequestHandler extends RequestHandler implements HttpHandler {
 
@@ -57,12 +52,12 @@ public class SystemRequestHandler extends RequestHandler implements HttpHandler 
         OptimizationRequestHandler.instance.configureGpu(request.isSettingGpu());
 
         if (request.getSettingMaxResults() != null) {
-            final int max = Math.max(Math.min(request.getSettingMaxResults(), 100_000_000), 10_000);
+            final int max = Math.clamp(request.getSettingMaxResults(), 10_000, 100_000_000);
             OptimizationRequestHandler.SETTING_MAXIMUM_RESULTS = max;
         }
 
         if (request.getSettingPenDefense() != null) {
-            final int max = Math.max(Math.min(request.getSettingPenDefense(), 10_000), 0);
+            final int max = Math.clamp(request.getSettingPenDefense(), 0, 10_000);
             StatCalculator.SETTING_PEN_DEFENSE = max;
         }
 

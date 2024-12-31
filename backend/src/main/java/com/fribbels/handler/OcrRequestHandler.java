@@ -35,7 +35,6 @@ public class OcrRequestHandler extends RequestHandler implements HttpHandler {
     private void initialize() throws Exception {
         final String path = new File(Main.class.getProtectionDomain().getCodeSource().getLocation()
                 .toURI()).getParentFile().getParentFile().getParentFile().getPath();
-//        System.err.println("Path: " + path);
 
         tessBaseAPI = new TessBaseAPI();
         if (tessBaseAPI.Init(path + "/data/tessdata/eng.traineddata", "eng", 0) != 0) {
@@ -135,7 +134,6 @@ public class OcrRequestHandler extends RequestHandler implements HttpHandler {
         final Set set = readSet();
         final String title;
         final String main;
-//        final String hero = readEquippedBy();
 
         if (isShiftedSet(set)) {
             title = readShiftedTitle();
@@ -151,7 +149,6 @@ public class OcrRequestHandler extends RequestHandler implements HttpHandler {
                 .title(title)
                 .main(main)
                 .set(set.getName())
-//                .hero(hero)
                 .build();
 
         System.out.println(ocrResponse);
@@ -162,9 +159,6 @@ public class OcrRequestHandler extends RequestHandler implements HttpHandler {
 
     private int enhanceBufferX = 50;
     private int enhanceBufferY = 150;
-
-    private int substatsBufferX = 50;
-    private int substatsBufferY = 400;
 
     private String readTitle() {
         setText();
@@ -194,11 +188,6 @@ public class OcrRequestHandler extends RequestHandler implements HttpHandler {
     private String readSubstatsNumbers() {
         setNumbersAndPercentAndComma();
         return readRectangle(1041, 185, 354, 553);
-    }
-
-    private String readEquippedBy() {
-        setText();
-        return readRectangle(165, 825, 265, 34);
     }
 
     private String readShiftedTitle() {
@@ -239,12 +228,10 @@ public class OcrRequestHandler extends RequestHandler implements HttpHandler {
                 x -> x,
                 x -> StringUtils.getLevenshteinDistance(x.getName(), text)));
 
-        final Set likelySet = distances.entrySet().stream()
+        return distances.entrySet().stream()
                 .min(Comparator.comparingInt(Map.Entry::getValue))
                 .orElse(new AbstractMap.SimpleEntry<>(Set.SPEED, 0))
                 .getKey();
-
-        return likelySet;
     }
 
     private String readRectangle(final int x, final int y, final int w, final int h) {

@@ -1,18 +1,36 @@
 package com.fribbels.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
-
 import java.util.List;
 
-@Getter
-@Builder
-@ToString
-@AllArgsConstructor
 public class MiniOptimizationResponse {
 
     private List<Integer> stats;
     private List<Integer> ids;
+
+    public MiniOptimizationResponse(List<Integer> stats, List<Integer> ids) {
+        this.stats = stats;
+        this.ids = ids;
+    }
+
+    public List<Integer> getStats() {
+        return stats;
+    }
+
+    public void setStats(List<Integer> stats) {
+        this.stats = stats;
+    }
+
+    public List<Integer> getIds() {
+        return ids;
+    }
+
+    public void setIds(List<Integer> ids) {
+        this.ids = ids;
+    }
+
+    @Override
+    public String toString() {
+        return "MiniOptimizationResponse [stats=" + stats + ", ids=" + ids + "]";
+    }
+
 }

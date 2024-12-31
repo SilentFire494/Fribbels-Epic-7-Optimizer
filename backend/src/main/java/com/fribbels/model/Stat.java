@@ -1,24 +1,11 @@
 package com.fribbels.model;
 
 import com.fribbels.enums.StatType;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 
-@Getter
-@ToString
-@AllArgsConstructor
-@EqualsAndHashCode
-public class Stat {
+public record Stat(StatType type, Integer value, Integer rolls, Integer ingameRolls, Boolean modified) {
 
-    private StatType type;
-
-    private Integer value;
-
-    private Integer rolls;
-
-    private Integer ingameRolls;
-
-    private Boolean modified;
+    @Override
+    public String toString() {
+        return "Stat []";
+    }
 }

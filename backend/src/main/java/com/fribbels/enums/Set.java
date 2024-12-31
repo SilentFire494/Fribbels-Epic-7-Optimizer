@@ -1,11 +1,7 @@
 package com.fribbels.enums;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
 public enum Set {
 
     @SerializedName("HealthSet")      HEALTH      (0, 2, new int[]{2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, new int[]{0, 0}, "HealthSet"),
@@ -27,9 +23,39 @@ public enum Set {
     @SerializedName("ProtectionSet")  PROTECTION  (16, 4, new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0}, new int[]{16, 16, 16, 16}, "ProtectionSet"),
     @SerializedName("TorrentSet")     TORRENT     (17, 4, new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2}, new int[]{17, 17}, "TorrentSet");
 
-    public int index;
+    private int index;
     private int count;
     private int[] arr;
     private int[] indices;
     private String name;
+    
+    private Set(int index, int count, int[] arr, int[] indices, String name) {
+        this.index = index;
+        this.count = count;
+        this.arr = arr;
+        this.indices = indices;
+        this.name = name;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public int[] getArr() {
+        return arr;
+    }
+
+    public int[] getIndices() {
+        return indices;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    
 }
