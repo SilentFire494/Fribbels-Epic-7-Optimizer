@@ -20,13 +20,13 @@ import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class HeroesRequestHandler extends RequestHandler implements HttpHandler {
 
@@ -167,7 +167,7 @@ public class HeroesRequestHandler extends RequestHandler implements HttpHandler 
 
         final String buildHash = build.getBuildHash();
         final HeroStats matchingBuild = builds.stream()
-                .filter(x -> StringUtils.equals(x.getBuildHash(), buildHash))
+                .filter(x -> x.getBuildHash().equals(buildHash))
                 .findFirst()
                 .orElse(null);
 
@@ -188,7 +188,7 @@ public class HeroesRequestHandler extends RequestHandler implements HttpHandler 
 
         final String buildHash = build.getBuildHash();
         final List<HeroStats> changedBuilds = builds.stream()
-                .filter(x -> !StringUtils.equals(x.getBuildHash(), buildHash))
+                .filter(x -> !x.getBuildHash().equals(buildHash))
                 .toList();
 
         hero.setBuilds(changedBuilds);
@@ -303,10 +303,10 @@ public class HeroesRequestHandler extends RequestHandler implements HttpHandler 
     }
 
     private int parseArtifactLevel(final String artifactLevel) {
-        if (StringUtils.isNumeric(artifactLevel)) {
-            return Integer.parseInt(artifactLevel);
-        }
-        return 0;
+        return Optional.ofNullable(artifactLevel)
+                .filter(s -> !s.isEmpty())
+                .map(Integer::parseInt)
+                .orElse(0);
     }
 
     private void addStatsToHero(final Hero hero, final boolean useReforgeStats) {
@@ -366,7 +366,7 @@ public class HeroesRequestHandler extends RequestHandler implements HttpHandler 
             if (!addStatsToBuild(hero, baseStats, build, useReforgeStats)) {
                 final String buildHash = build.getBuildHash();
                 changedBuilds = changedBuilds.stream()
-                        .filter(x -> !StringUtils.equals(x.getBuildHash(), buildHash))
+                        .filter(x -> !x.getBuildHash().equals(buildHash))
                         .toList();
 
             }
@@ -417,8 +417,7 @@ public class HeroesRequestHandler extends RequestHandler implements HttpHandler 
         final int upgrades = items.stream().mapToInt(Item::getUpgradeable).sum();
         final int conversions = items.stream().mapToInt(Item::getConvertable).sum();
         final int priority = items.stream().mapToInt(Item::getPriority).sum();
-        final HeroStats finalStats = statCalculator.addAccumulatorArrsToHero(baseStats, statAccumulatorArrs, setsArr,
-                hero, upgrades, conversions, 0, priority);
+        final HeroStats finalStats = statCalculator.addAccumulatorArrsToHero(baseStats, statAccumulatorArrs, setsArr, hero, upgrades, conversions, 0, priority);
         build.setAtk(finalStats.getAtk());
         build.setHp(finalStats.getHp());
         build.setDef(finalStats.getDef());
@@ -510,7 +509,7 @@ public class HeroesRequestHandler extends RequestHandler implements HttpHandler 
         // Remove the hero from db
         final List<Hero> heroes = heroDb.getAllHeroes();
         final List<Hero> newHeroes = heroes.stream()
-                .filter(x -> !StringUtils.equals(x.getId(), request.getId()))
+                .filter(x -> !x.getId().equals(request.getId()))
                 .toList();
         heroDb.setHeroes(newHeroes);
 
@@ -604,7 +603,7 @@ public class HeroesRequestHandler extends RequestHandler implements HttpHandler 
         final Hero hero = heroDb.getHeroById(heroId);
         if (hero == null)
             return "";
-            
+
         final HeroStats baseStats = baseStatsDb.getBaseStatsByName(hero.getName(), hero.getStars());
         if (baseStats == null)
             return "";

@@ -4,7 +4,6 @@ import com.fribbels.model.Request;
 import com.fribbels.response.Response;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -27,7 +26,8 @@ public class RequestHandler {
     }
 
     protected <T extends Request> T parseRequest(final HttpExchange exchange, final Class<T> type) throws IOException {
-        final String body = IOUtils.toString(exchange.getRequestBody(), StandardCharsets.UTF_8);
+        byte[] exchangeRequestBody = exchange.getRequestBody().readAllBytes();
+        final String body = new String(exchangeRequestBody, StandardCharsets.UTF_8);
         System.out.println(body);
         return GSON.fromJson(body, type);
     }

@@ -38,7 +38,7 @@ public class SystemRequestHandler extends RequestHandler implements HttpHandler 
     }
 
     private String interrupt() {
-        Main.interrupt = true;
+        Main.setInterrupt(true);
         OptimizationRequestHandler.inProgress = false;
         System.out.println("INTERRUPT MAIN");
         return "";
@@ -47,8 +47,8 @@ public class SystemRequestHandler extends RequestHandler implements HttpHandler 
     private String setSettings(final SetSettingsRequest request) {
         System.out.println(request);
         HeroesRequestHandler.SETTING_UNLOCK_ON_UNEQUIP = request.isSettingUnlockOnUnequip();
-        StatCalculator.SETTING_RAGE_SET = request.isSettingRageSet();
-        StatCalculator.SETTING_PEN_SET = request.isSettingPenSet();
+        StatCalculator.setSettingRageSet(request.isSettingRageSet());
+        StatCalculator.setSettingPenSet(request.isSettingPenSet());
         OptimizationRequestHandler.instance.configureGpu(request.isSettingGpu());
 
         if (request.getSettingMaxResults() != null) {
@@ -58,7 +58,7 @@ public class SystemRequestHandler extends RequestHandler implements HttpHandler 
 
         if (request.getSettingPenDefense() != null) {
             final int max = Math.clamp(request.getSettingPenDefense(), 0, 10_000);
-            StatCalculator.SETTING_PEN_DEFENSE = max;
+            StatCalculator.setSettingPenDefense(max);
         }
 
         return "";

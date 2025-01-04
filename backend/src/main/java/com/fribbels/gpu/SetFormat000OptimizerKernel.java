@@ -144,8 +144,6 @@ public class SetFormat000OptimizerKernel extends GpuOptimizerKernel {
             final int rageSet = min(1, setSolutionBitMasks[setIndex] & (1 << 21));
             final int penSet = min(1, setSolutionBitMasks[setIndex] & (1 << 23));
             final int revengeSet = min(1, setSolutionBitMasks[setIndex] & (1 << 24));
-//            final int protectionSet = min(1, setSolutionBitMasks[setIndex] & (1 << 25));
-//            final int injurySet = min(1, setSolutionBitMasks[setIndex] & (1 << 26));
             final int torrentSet = min(1, setSolutionBitMasks[setIndex] & (1 << 27)) + min(1, setSolutionBitMasks[setIndex] & (1 << 28)) + min(1, setSolutionBitMasks[setIndex] & (1 << 29));
 
             final float atk =  ((bonusBaseAtk  + wAtk+hAtk+aAtk+nAtk+rAtk+bAtk + (atkSet * atkSetBonus)) * bonusMaxAtk);
@@ -171,13 +169,13 @@ public class SetFormat000OptimizerKernel extends GpuOptimizerKernel {
 
             final int ehp = (int) (hp * (def/300 + 1));
             final int hpps = (int) (hp*spdDiv1000);
-            final int ehpps = (int) ((float)ehp*spdDiv1000);
+            final int ehpps = (int) (ehp*spdDiv1000);
             final int dmg = (int) (((critRate * atk * critDamage) + (1-critRate) * atk) * penMultiplier * pctDmgMultiplier);
-            final int dmgps = (int) ((float)dmg*spdDiv1000);
+            final int dmgps = (int) (dmg*spdDiv1000);
             final int mcdmg = (int) (atk * critDamage * penMultiplier * pctDmgMultiplier);
-            final int mcdmgps = (int) ((float)mcdmg*spdDiv1000);
+            final int mcdmgps = (int) (mcdmg*spdDiv1000);
             final int dmgh = (int) ((critDamage * hp * penMultiplier * pctDmgMultiplier)/10);
-            final int dmgd = (int) ((critDamage * def * penMultiplier * pctDmgMultiplier));
+            final int dmgd = (int) (critDamage * def * penMultiplier * pctDmgMultiplier);
 
             final int s1 = getSkillValue(0, atk, def, hp, spd, critDamage, pctDmgMultiplier, penSetOn);
             final int s2 = getSkillValue(1, atk, def, hp, spd, critDamage, pctDmgMultiplier, penSetOn);
@@ -197,15 +195,6 @@ public class SetFormat000OptimizerKernel extends GpuOptimizerKernel {
             final float bsEff = (eff - baseEff - (effSet * 20));
             final float bsRes = (res - baseRes - (resSet * 20));
             final float bsSpd = (spd - baseSpeed - (speedSet * speedSetBonus) - (revengeSet * revengeSetBonus));
-
-            //            final float atk =  ((bonusBaseAtk  + wAtk+hAtk+aAtk+nAtk+rAtk+bAtk + (atkSet * atkSetBonus)) * bonusMaxAtk);
-            //            final float hp =   ((bonusBaseHp   + wHp+hHp+aHp+nHp+rHp+bHp + (hpSet * hpSetBonus + torrentSet * hpSetBonus/-2)) * bonusMaxHp);
-            //            final float def =  ((bonusBaseDef  + wDef+hDef+aDef+nDef+rDef+bDef + (defSet * defSetBonus)) * bonusMaxDef);
-            //            final int cr =     (int) (baseCr + wCr+hCr+aCr+nCr+rCr+bCr + (crSet * 12) + bonusCr + aeiCr);
-            //            final int cd =     (int) (baseCd + wCd+hCd+aCd+nCd+rCd+bCd + (cdSet * 60) + bonusCd + aeiCd);
-            //            final int eff =    (int) (baseEff   + wEff+hEff+aEff+nEff+rEff+bEff + (effSet * 20) + bonusEff + aeiEff);
-            //            final int res =    (int) (baseRes   + wRes+hRes+aRes+nRes+rRes+bRes + (resSet * 20) + bonusRes + aeiRes);
-            //            final int spd =    (int) (baseSpeed + wSpeed+hSpeed+aSpeed+nSpeed+rSpeed+bSpeed + (speedSet * speedSetBonus) + (revengeSet * revengeSetBonus) + bonusSpeed + aeiSpeed);
 
             final int bs = (int) (bsHp + bsAtk + bsDef + bsCr*1.6f + bsCd*1.14f + bsEff + bsRes + bsSpd*2);
 
@@ -249,8 +238,6 @@ public class SetFormat000OptimizerKernel extends GpuOptimizerKernel {
                               final float critDamage,
                               final float pctDmgMultiplier,
                               final float penSetOn) {
-        //        final float effectiveDefense = targetDefense * targets[s] * penMultiplier
-        //        final float realDefense = targetDefense * (penSetOn * 0.12f + 0);
         final float realPenetration = (1 - penetration[s]) * (1 - penSetOn * 0.15f * targets[s]);
         final float statScalings =
                 selfHpScaling[s] *hp +
@@ -267,11 +254,7 @@ public class SetFormat000OptimizerKernel extends GpuOptimizerKernel {
         final float offensiveValue = (atk * rate[s] + statScalings) * 1.871f * pow[s] * increasedValueMulti * hitTypeMultis * dmgUpMod * pctDmgMultiplier;
         final float supportValue = selfHpScaling[s] * hp * support[s] + selfAtkScaling[s] * atk * support[s] + selfDefScaling[s] * def * support[s];
         final float defensiveValue = 1f/(targetDefense*max(0, realPenetration)/300f + 1f);
-        final int value = (int)(offensiveValue * defensiveValue + supportValue + extraDamage);
-
-        //        System.out.println("S" + (s+1) + " " + value + " " + (hitTypeMultis) + " " + (1.871f * m.getPow()[s]));
-        //        System.out.println(m);
-
-        return value;
+        
+        return (int)(offensiveValue * defensiveValue + supportValue + extraDamage);
     }
 }

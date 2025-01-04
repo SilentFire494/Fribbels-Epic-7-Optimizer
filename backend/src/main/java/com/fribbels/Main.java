@@ -23,43 +23,44 @@ public class Main {
 
     private static HttpServer server;
     private static ExecutorService executorService;
+
     public static final ArtifactStatsDb artifactStatsDb = new ArtifactStatsDb();
     private static final BaseStatsDb baseStatsDb = new BaseStatsDb();
     private static final HeroDb heroDb = new HeroDb(baseStatsDb);
     private static final ItemDb itemDb = new ItemDb(heroDb);
 
-    public static boolean interrupt = false;
-    public static int THREADS = 10;
-    public static long BEST_DEVICE_ID = 0;
+    private static boolean interrupt = false;
+    private static int threads = 10;
+    private static long bestDeviceId = 0;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) {
         try {
             final int threadsToUse = Runtime.getRuntime().availableProcessors() * 2;
-            if (threadsToUse > THREADS) {
-                THREADS = threadsToUse;
-            }
+            threads = Math.max(threads, threadsToUse);
         } catch (final RuntimeException e) {
-            System.err.println("Error setting number of threads, defaulting to 10" + e);
+            System.err.println("Error setting number of threads, defaulting to 10: " + e);
         }
 
         System.out.println("START");
+        executorService = Executors.newFixedThreadPool(threads);
 
-        executorService = Executors.newFixedThreadPool(THREADS);
-        start();
+        try {
+            start();
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void start() throws Exception {
         try {
             server = HttpServer.create(new InetSocketAddress("localhost", 8130), 0);
-        } catch (BindException e) {
-            // Likely because the service already exists on that port
-            System.out.println(e);
+        } catch (final BindException e) {
+            System.out.println("Port already in use: " + e);
             System.exit(0);
-            return;
         }
 
-
-        final HeroesRequestHandler heroesRequestHandler = new HeroesRequestHandler(heroDb, baseStatsDb, artifactStatsDb, itemDb, new StatCalculator());
+        final HeroesRequestHandler heroesRequestHandler = new HeroesRequestHandler(
+                heroDb, baseStatsDb, artifactStatsDb, itemDb, new StatCalculator());
 
         server.createContext("/system", new SystemRequestHandler());
         server.createContext("/items", new ItemsRequestHandler(itemDb, heroDb, baseStatsDb, heroesRequestHandler));
@@ -67,7 +68,7 @@ public class Main {
         server.createContext("/heroes", heroesRequestHandler);
         server.createContext("/ocr", new OcrRequestHandler());
 
-        System.out.println("START BACKEND WITH " + THREADS + " THREADS");
+        System.out.println("START BACKEND WITH " + threads + " THREADS");
 
         server.setExecutor(executorService);
         server.start();
@@ -78,10 +79,10 @@ public class Main {
         System.out.println("** Best device: **\n" + KernelManager.instance().bestDevice());
 
         try {
-            Kernel kernel = new Kernel() {
+            final Kernel kernel = new Kernel() {
                 @Override
                 public void run() {
-
+                    // Kernel logic
                 }
             };
 
@@ -90,6 +91,30 @@ public class Main {
         } catch (final Exception e) {
             System.out.println("** Error running OpenCl: **\n" + e);
         }
-
     }
+
+    public static boolean isInterrupt() {
+        return interrupt;
+    }
+
+    public static void setInterrupt(boolean interrupt) {
+        Main.interrupt = interrupt;
+    }
+
+    public static int getThreads() {
+        return threads;
+    }
+
+    public static void setThreads(int threads) {
+        Main.threads = threads;
+    }
+
+    public static long getBestDeviceId() {
+        return bestDeviceId;
+    }
+
+    public static void setBestDeviceId(long bestDeviceId) {
+        Main.bestDeviceId = bestDeviceId;
+    }
+
 }

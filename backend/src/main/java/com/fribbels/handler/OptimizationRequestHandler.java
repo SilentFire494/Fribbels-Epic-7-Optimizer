@@ -32,11 +32,6 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import lombok.Getter;
-import lombok.SneakyThrows;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,6 +52,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class OptimizationRequestHandler extends RequestHandler implements HttpHandler {
 
@@ -70,7 +66,6 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
     public static boolean inProgress = false;
 
     private static final Gson gson = new Gson();
-    @Getter
     private AtomicLong searchedCounter = new AtomicLong(0);
     private AtomicLong resultsCounter = new AtomicLong(0);
 
@@ -95,7 +90,7 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
 
         if (gpuEnabled) {
             final Device device = KernelManager.instance().bestDevice();
-            Main.BEST_DEVICE_ID = device.getDeviceId();
+            Main.setBestDeviceId(device.getDeviceId());
 
             System.out.println(KernelManager.instance().bestDevice().getType());
 
@@ -254,7 +249,7 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
                     sendResponse(exchange, deleteExecutionRequest(deleteExecutionRequest));
                     System.out.println("Sent response");
                 case "/optimization/optimizationRequest":
-                    Main.interrupt = false;
+                    Main.setInterrupt(false);
                     final OptimizationRequest optimizationRequest = parseRequest(exchange, OptimizationRequest.class);
                     sendResponse(exchange, handleOptimizationRequest(optimizationRequest));
                     System.out.println("Sent response");
@@ -298,7 +293,7 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
             System.err.println(e);
             e.printStackTrace();
         } finally {
-            Main.interrupt = false;
+            Main.setInterrupt(false);
         }
 
         System.out.println("Sent error");
@@ -312,7 +307,7 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
     }
 
     public String handleGetProgressRequest() {
-        final OptimizationResponse response = new OptimizationResponse(searchedCounter.get(),  resultsCounter.get());
+        final OptimizationResponse response = new OptimizationResponse(searchedCounter.get(), resultsCounter.get());
         return gson.toJson(response);
     }
 
@@ -323,7 +318,7 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
             return "";
         }
 
-        final boolean hasExcludedGearIds = CollectionUtils.isNotEmpty(request.getExcludedGearIds());
+        final boolean hasExcludedGearIds = !request.getExcludedGearIds().isEmpty();
         final Map<String, String> excludedGearIds = new HashMap<>();
         if (hasExcludedGearIds) {
             for (final String gearId : request.getExcludedGearIds()) {
@@ -436,17 +431,7 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
         try {
             heroDb.saveOptimizationRequest(request);
             System.gc();
-            return optimize(request, HeroStats.builder()
-                    .atk(request.getAtk())
-                    .hp(request.getHp())
-                    .spd(request.getSpd())
-                    .def(request.getDef())
-                    .cr(request.getCr())
-                    .cd(request.getCd())
-                    .eff(request.getEff())
-                    .res(request.getRes())
-                    .dac(request.getDac())
-                    .build());
+            return optimize(request);
         } catch (final Exception e) {
             inProgress = false;
             throw new RuntimeException("Optimization request failed", e);
@@ -565,8 +550,7 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
         return n - (n >> 1);
     }
 
-    @SneakyThrows
-    public String optimize(final OptimizationRequest request, final HeroStats unused) {
+    public String optimize(final OptimizationRequest request) {
         long startTime = System.currentTimeMillis();
         final StatCalculator statCalculator = new StatCalculator();
         final OptimizationDb optimizationDb = optimizationDbs.get(request.getExecutionId());
@@ -575,7 +559,8 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
         }
 
         inProgress = true;
-        final HeroStats base = baseStatsDb.getBaseStatsByName(request.getHero().getName(), request.getHero().getStars());
+        final HeroStats base = baseStatsDb.getBaseStatsByName(request.getHero().getName(),
+                request.getHero().getStars());
         System.out.println("Started optimization request");
         addCalculatedFields(request);
         final boolean useReforgeStats = request.getInputPredictReforges();
@@ -601,7 +586,7 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
             final String id = request.getHero().getId();
             final String equippedId = item.getEquippedById();
 
-            if (!StringUtils.equals(id, equippedId) && StringUtils.isNotBlank(equippedId)) {
+            if (!id.equals(equippedId) && !equippedId.isBlank()) {
                 item.setAlreadyEquipped(1);
             }
         });
@@ -687,11 +672,11 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
             bonusMaxDef = 1 + base.getBonusStats().getBonusMaxDefPercent() / 100f + hero.getFinalDefMultiplier() / 100;
         }
 
-        final float penSetDmgBonus = (StatCalculator.SETTING_PEN_DEFENSE / 300f + 1)
-                / (0.00283333f * StatCalculator.SETTING_PEN_DEFENSE + 1);
+        final float penSetDmgBonus = (StatCalculator.getSettingPenDefense() / 300f + 1)
+                / (0.00283333f * StatCalculator.getSettingPenDefense() + 1);
 
-        final int SETTING_RAGE_SET = StatCalculator.SETTING_RAGE_SET ? 1 : 0;
-        final int SETTING_PEN_SET = StatCalculator.SETTING_PEN_SET ? 1 : 0;
+        final int SETTING_RAGE_SET = StatCalculator.isSettingRageSet() ? 1 : 0;
+        final int SETTING_PEN_SET = StatCalculator.isSettingPenSet() ? 1 : 0;
 
         final long maxPerms = wSize * hSize * aSize * nSize * rSize * bSize;
 
@@ -721,7 +706,7 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
                     speedSetBonus,
                     revengeSetBonus,
                     penSetDmgBonus,
-                    StatCalculator.SETTING_PEN_DEFENSE,
+                    StatCalculator.getSettingPenDefense(),
                     bonusMaxAtk,
                     bonusMaxDef,
                     bonusMaxHp,
@@ -747,7 +732,7 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
                     List<OpenCLPlatform> platforms = OpenCLPlatform.getUncachedOpenCLPlatforms();
                     final Optional<OpenCLDevice> bestDevice = platforms.stream()
                             .flatMap(x -> x.getOpenCLDevices().stream())
-                            .filter(x -> x.getDeviceId() == Main.BEST_DEVICE_ID)
+                            .filter(x -> x.getDeviceId() == Main.getBestDeviceId())
                             .findFirst();
 
                     System.out.println(bestDevice);
@@ -772,7 +757,7 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
                 final Map<String, PassesContainer> passesPool = new HashMap<>();
 
                 for (int i = 0; i < maxPerms / max + 1; i++) {
-                    if (exit.get() || Main.interrupt)
+                    if (exit.get() || Main.isInterrupt())
                         break;
 
                     final int finalI = i;
@@ -808,10 +793,10 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
                     List<OpenCLPlatform> platforms = OpenCLPlatform.getUncachedOpenCLPlatforms();
                     final Optional<OpenCLDevice> bestDevice = platforms.stream()
                             .flatMap(x -> x.getOpenCLDevices().stream())
-                            .filter(x -> x.getDeviceId() == Main.BEST_DEVICE_ID)
+                            .filter(x -> x.getDeviceId() == Main.getBestDeviceId())
                             .findFirst();
 
-                    while (executionCounter.get() > 1 && !exit.get() && !Main.interrupt) {
+                    while (executionCounter.get() > 1 && !exit.get() && !Main.isInterrupt()) {
                         Thread.sleep(10);
                     }
 
@@ -839,7 +824,7 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
                                     if (iteration >= maxPerms) {
                                         break;
                                     }
-                                    if (Main.interrupt || exit.get()) {
+                                    if (Main.isInterrupt() || exit.get()) {
                                         break;
                                     }
 
@@ -892,7 +877,8 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
                                     result.setSets(collectedSets);
                                     result.setItems(
                                             List.of(allweapons[w].getId(), allhelmets[h].getId(), allarmors[a]
-                                                    .getId(), allnecklaces[n].getId(), allrings[r].getId(), allboots[b].getId()));
+                                                    .getId(), allnecklaces[n].getId(), allrings[r].getId(),
+                                                    allboots[b].getId()));
                                     result.setModIds(List.of(allweapons[w].getModId(),
                                             allhelmets[h].getModId(), allarmors[a]
                                                     .getModId(),
@@ -924,6 +910,8 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
                     });
 
                 }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             } finally {
                 System.out.println("DISPOSE");
                 kernel.dispose();
@@ -974,7 +962,7 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
                                                 ring, accumulatorArrsByItemId, useReforgeStats);
 
                                         for (int b = 0; b < bSize; b++) {
-                                            if (Main.interrupt) {
+                                            if (Main.isInterrupt()) {
                                                 executorService.shutdownNow();
                                                 return;
                                             }
@@ -1084,7 +1072,8 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
 
                 System.out.println("OPTIMIZATION_REQUEST_END");
                 System.out.println("PROGRESS: [" + size + "]");
-                OptimizationResponse response = new OptimizationResponse(Math.min(searchedCounter.get(), maxPerms), resultsCounter.get());
+                OptimizationResponse response = new OptimizationResponse(Math.min(searchedCounter.get(), maxPerms),
+                        resultsCounter.get());
 
                 inProgress = false;
 
@@ -1100,7 +1089,6 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
         }
 
         inProgress = false;
-
         return "";
     }
 
@@ -1133,26 +1121,40 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
     public boolean passesFilter(final HeroStats heroStats, final OptimizationRequest request, final int[] sets) {
         if (heroStats.getAtk() < request.getInputAtkMinLimit() || heroStats.getAtk() > request.getInputAtkMaxLimit()
                 || heroStats.getHp() < request.getInputHpMinLimit() || heroStats.getHp() > request.getInputHpMaxLimit()
-                || heroStats.getDef() < request.getInputDefMinLimit() || heroStats.getDef() > request.getInputDefMaxLimit()
-                || heroStats.getSpd() < request.getInputSpdMinLimit() || heroStats.getSpd() > request.getInputSpdMaxLimit()
+                || heroStats.getDef() < request.getInputDefMinLimit()
+                || heroStats.getDef() > request.getInputDefMaxLimit()
+                || heroStats.getSpd() < request.getInputSpdMinLimit()
+                || heroStats.getSpd() > request.getInputSpdMaxLimit()
                 || heroStats.getCr() < request.getInputCrMinLimit() || heroStats.getCr() > request.getInputCrMaxLimit()
                 || heroStats.getCd() < request.getInputCdMinLimit() || heroStats.getCd() > request.getInputCdMaxLimit()
-                || heroStats.getEff() < request.getInputEffMinLimit() || heroStats.getEff() > request.getInputEffMaxLimit()
-                || heroStats.getRes() < request.getInputResMinLimit() || heroStats.getRes() > request.getInputResMaxLimit()
+                || heroStats.getEff() < request.getInputEffMinLimit()
+                || heroStats.getEff() > request.getInputEffMaxLimit()
+                || heroStats.getRes() < request.getInputResMinLimit()
+                || heroStats.getRes() > request.getInputResMaxLimit()
                 || heroStats.getCp() < request.getInputMinCpLimit() || heroStats.getCp() > request.getInputMaxCpLimit()
-                || heroStats.getHpps() < request.getInputMinHppsLimit() || heroStats.getHpps() > request.getInputMaxHppsLimit()
-                || heroStats.getEhp() < request.getInputMinEhpLimit() || heroStats.getEhp() > request.getInputMaxEhpLimit()
-                || heroStats.getEhpps() < request.getInputMinEhppsLimit() || heroStats.getEhpps() > request.getInputMaxEhppsLimit()
-                || heroStats.getDmg() < request.getInputMinDmgLimit() || heroStats.getDmg() > request.getInputMaxDmgLimit()
-                || heroStats.getDmgps() < request.getInputMinDmgpsLimit() || heroStats.getDmgps() > request.getInputMaxDmgpsLimit()
-                || heroStats.getMcdmg() < request.getInputMinMcdmgLimit() || heroStats.getMcdmg() > request.getInputMaxMcdmgLimit()
-                || heroStats.getMcdmgps() < request.getInputMinMcdmgpsLimit() || heroStats.getMcdmgps() > request.getInputMaxMcdmgpsLimit()
-                || heroStats.getDmgh() < request.getInputMinDmgHLimit() || heroStats.getDmgh() > request.getInputMaxDmgHLimit()
-                || heroStats.getDmgd() < request.getInputMinDmgDLimit() || heroStats.getDmgd() > request.getInputMaxDmgDLimit()
+                || heroStats.getHpps() < request.getInputMinHppsLimit()
+                || heroStats.getHpps() > request.getInputMaxHppsLimit()
+                || heroStats.getEhp() < request.getInputMinEhpLimit()
+                || heroStats.getEhp() > request.getInputMaxEhpLimit()
+                || heroStats.getEhpps() < request.getInputMinEhppsLimit()
+                || heroStats.getEhpps() > request.getInputMaxEhppsLimit()
+                || heroStats.getDmg() < request.getInputMinDmgLimit()
+                || heroStats.getDmg() > request.getInputMaxDmgLimit()
+                || heroStats.getDmgps() < request.getInputMinDmgpsLimit()
+                || heroStats.getDmgps() > request.getInputMaxDmgpsLimit()
+                || heroStats.getMcdmg() < request.getInputMinMcdmgLimit()
+                || heroStats.getMcdmg() > request.getInputMaxMcdmgLimit()
+                || heroStats.getMcdmgps() < request.getInputMinMcdmgpsLimit()
+                || heroStats.getMcdmgps() > request.getInputMaxMcdmgpsLimit()
+                || heroStats.getDmgh() < request.getInputMinDmgHLimit()
+                || heroStats.getDmgh() > request.getInputMaxDmgHLimit()
+                || heroStats.getDmgd() < request.getInputMinDmgDLimit()
+                || heroStats.getDmgd() > request.getInputMaxDmgDLimit()
                 || heroStats.getS1() < request.getInputMinS1Limit() || heroStats.getS1() > request.getInputMaxS1Limit()
                 || heroStats.getS2() < request.getInputMinS2Limit() || heroStats.getS2() > request.getInputMaxS2Limit()
                 || heroStats.getS3() < request.getInputMinS3Limit() || heroStats.getS3() > request.getInputMaxS3Limit()
-                || heroStats.getScore() < request.getInputMinScoreLimit() || heroStats.getScore() > request.getInputMaxScoreLimit()
+                || heroStats.getScore() < request.getInputMinScoreLimit()
+                || heroStats.getScore() > request.getInputMaxScoreLimit()
                 || heroStats.getBs() < request.getInputMinBSLimit() || heroStats.getBs() > request.getInputMaxBSLimit()
                 || heroStats.getPriority() < request.getInputMinPriorityLimit()
                 || heroStats.getPriority() > request.getInputMaxPriorityLimit()
@@ -1160,7 +1162,8 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
                 || heroStats.getUpgrades() > request.getInputMaxUpgradesLimit()
                 || heroStats.getConversions() < request.getInputMinConversionsLimit()
                 || heroStats.getConversions() > request.getInputMaxConversionsLimit()
-                || heroStats.getEq() < request.getInputMinEquippedLimit() || heroStats.getEq() > request.getInputMaxEquippedLimit()) {
+                || heroStats.getEq() < request.getInputMinEquippedLimit()
+                || heroStats.getEq() > request.getInputMaxEquippedLimit()) {
             return false;
         }
 
@@ -1257,7 +1260,8 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
 
             for (Set set1 : inputSets1) {
                 for (Set set2 : inputSets2) {
-                    final int[] indices = ArrayUtils.addAll(set1.getIndices(), set2.getIndices());
+                    final int[] indices = Stream.of(set1.getIndices(), set2.getIndices()).flatMapToInt(Arrays::stream)
+                            .toArray();
 
                     List<List<Integer>> allSolutions = permute(indices);
 
@@ -1275,10 +1279,10 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
 
             final int[] missing = new int[] { 0, 0 };
             for (Set set1 : inputSets1) {
-                final int[] indices = ArrayUtils.addAll(set1.getIndices(), missing);
+                final int[] indices = Stream.of(set1.getIndices(), missing).flatMapToInt(Arrays::stream).toArray();
                 for (int a = 0; a < SET_COUNT; a++) {
                     for (int b = 0; b < SET_COUNT; b++) {
-                        final int[] indicesInstance = ArrayUtils.clone(indices);
+                        final int[] indicesInstance = indices.clone();
                         indicesInstance[4] = a;
                         indicesInstance[5] = b;
 
@@ -1298,12 +1302,12 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
             // [2][0][0]
             final int[] missing = new int[] { 0, 0, 0, 0 };
             for (Set set1 : inputSets1) {
-                final int[] indices = ArrayUtils.addAll(set1.getIndices(), missing);
+                final int[] indices = Stream.of(set1.getIndices(), missing).flatMapToInt(Arrays::stream).toArray();
                 for (int a = 0; a < SET_COUNT; a++) {
                     for (int b = 0; b < SET_COUNT; b++) {
                         for (int c = 0; c < SET_COUNT; c++) {
                             for (int d = 0; d < SET_COUNT; d++) {
-                                final int[] indicesInstance = ArrayUtils.clone(indices);
+                                final int[] indicesInstance = indices.clone();
                                 indicesInstance[2] = a;
                                 indicesInstance[3] = b;
                                 indicesInstance[4] = c;
@@ -1330,11 +1334,11 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
             final int[] missing = new int[] { 0, 0 };
             for (Set set1 : inputSets1) {
                 for (Set set2 : inputSets2) {
-                    final int[] indices = ArrayUtils.addAll(ArrayUtils.addAll(set1.getIndices(), set2.getIndices()),
-                            missing);
+                    final int[] indices = Stream.of(set1.getIndices(), set2.getIndices(), missing)
+                            .flatMapToInt(Arrays::stream).toArray();
                     for (int a = 0; a < SET_COUNT; a++) {
                         for (int b = 0; b < SET_COUNT; b++) {
-                            final int[] indicesInstance = ArrayUtils.clone(indices);
+                            final int[] indicesInstance = indices.clone();
                             indicesInstance[4] = a;
                             indicesInstance[5] = b;
 
@@ -1357,8 +1361,8 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
             for (Set set1 : inputSets1) {
                 for (Set set2 : inputSets2) {
                     for (Set set3 : inputSets3) {
-                        final int[] indices = ArrayUtils.addAll(ArrayUtils.addAll(set1.getIndices(), set2.getIndices()),
-                                set3.getIndices());
+                        final int[] indices = Stream.of(set1.getIndices(), set2.getIndices(), set3.getIndices())
+                                .flatMapToInt(Arrays::stream).toArray();
 
                         List<List<Integer>> allSolutions = permute(indices);
 

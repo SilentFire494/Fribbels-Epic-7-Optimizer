@@ -19,7 +19,6 @@ import com.fribbels.response.GetAllItemsResponse;
 import com.fribbels.response.GetItemByIdResponse;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -299,7 +298,7 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
             }
 
             final Item equippedItem = equipment.get(item.getGear());
-            if (!StringUtils.equals(equippedItem.getId(), item.getId())) {
+            if (!equippedItem.getId().equals(item.getId())) {
                 item.setEquippedByName(null);
                 item.setEquippedById(null);
             }
@@ -446,7 +445,7 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
         allHeroes.forEach(x -> heroesByName.putIfAbsent(x.getName(), x));
 
         for (final Item item : newItems) {
-            if (StringUtils.isBlank(item.getHeroName())) {
+            if (item.getHeroName().isBlank()) {
                 continue;
             }
 
@@ -551,7 +550,7 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
     public String getItemByIngameId(final IdRequest request) {
         final List<Item> items = itemDb.getAllItems();
         final Optional<Item> match = items.stream()
-                .filter(x -> StringUtils.equals(x.getIngameId(), request.getId()))
+                .filter(x -> x.getIngameId().equals(request.getId()))
                 .findFirst();
 
         System.out.println(request);

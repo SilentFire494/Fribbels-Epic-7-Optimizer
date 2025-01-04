@@ -6,7 +6,6 @@ import com.fribbels.request.BonusStatsRequest;
 import com.fribbels.request.ModStatsRequest;
 import com.fribbels.request.OptimizationRequest;
 import com.fribbels.request.SkillOptionsRequest;
-import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
@@ -259,13 +258,13 @@ public class Hero {
                     .build();
         } else {
             final SkillData s1 = Arrays.stream(skills.getS1())
-                    .filter(x -> StringUtils.equals(x.getName(), skillOptions.getS1().getSkillEffect())).findFirst()
+                    .filter(x -> x.getName().equals(skillOptions.getS1().getSkillEffect())).findFirst()
                     .orElse(skills.getS1()[0]);
             final SkillData s2 = Arrays.stream(skills.getS2())
-                    .filter(x -> StringUtils.equals(x.getName(), skillOptions.getS2().getSkillEffect())).findFirst()
+                    .filter(x -> x.getName().equals(skillOptions.getS2().getSkillEffect())).findFirst()
                     .orElse(skills.getS2()[0]);
             final SkillData s3 = Arrays.stream(skills.getS3())
-                    .filter(x -> StringUtils.equals(x.getName(), skillOptions.getS3().getSkillEffect())).findFirst()
+                    .filter(x -> x.getName().equals(skillOptions.getS3().getSkillEffect())).findFirst()
                     .orElse(skills.getS3()[0]);
             return DamageMultipliers.builder()
                     .rate(new Float[] { s1.getRate(), s2.getRate(), s3.getRate() })
@@ -306,31 +305,31 @@ public class Hero {
     }
 
     private float calculateSupport(final String name) {
-        if (StringUtils.contains(name, "heal") ||
-                StringUtils.contains(name, "barrier")) {
+        if (name.contains("heal") ||
+                name.contains("barrier")) {
             return 1f;
         }
         return 0f;
     }
 
     private float calculateCrit(final String name) {
-        if (StringUtils.contains(name, "crit")) {
+        if (name.contains("crit")) {
             return 1f;
         }
         return 0f;
     }
 
     private Float calculateHitMulti(final String name) {
-        if (StringUtils.contains(name, "crit")) {
+        if (name.contains("crit")) {
             return 0f;
         }
-        if (StringUtils.contains(name, "crushing")) {
+        if (name.contains("crushing")) {
             return 1.3f;
         }
-        if (StringUtils.contains(name, "normal")) {
+        if (name.contains("normal")) {
             return 1f;
         }
-        if (StringUtils.contains(name, "miss")) {
+        if (name.contains("miss")) {
             return 0.75f;
         }
         return 0f;

@@ -7,197 +7,73 @@ import com.fribbels.model.HeroStats;
 import java.util.Arrays;
 import java.util.Comparator;
 
+/**
+ * The {@code Sorter} class provides a utility method for sorting an array of {@link HeroStats}
+ * objects based on a specific optimization column and sort order (ascending or descending).
+ */
 public class Sorter {
-    
-    private Sorter() {
-    }
+    private Sorter() {}
 
+    /**
+     * Sorts an array of {@link HeroStats} objects based on the specified optimization column and sort order.
+     *
+     * @param data   The array of {@link HeroStats} objects to be sorted.
+     * @param column The optimization column by which to sort the heroes.
+     * @param order  The sort order, either ascending or descending.
+     * @throws IllegalArgumentException If an invalid sort order is provided.
+     */
     public static void sortHeroes(final HeroStats[] data, final OptimizationColumn column, final SortOrder order) {
         System.out.println("SORTING HEROES BY " + column + " " + order);
-        switch (order) {
-            case ASC:
-                switch (column) {
-                    case ATK:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getAtk));
-                        break;
-                    case HP:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getHp));
-                        break;
-                    case DEF:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getDef));
-                        break;
-                    case SPD:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getSpd));
-                        break;
-                    case CR:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getCr));
-                        break;
-                    case CD:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getCd));
-                        break;
-                    case EFF:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getEff));
-                        break;
-                    case RES:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getRes));
-                        break;
-                    case DAC:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getDac));
-                        break;
-                    case CP:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getCp));
-                        break;
-                    case HPPS:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getHpps));
-                        break;
-                    case EHP:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getEhp));
-                        break;
-                    case EHPPS:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getEhpps));
-                        break;
-                    case DMG:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getDmg));
-                        break;
-                    case DMGPS:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getDmgps));
-                        break;
-                    case MCDMG:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getMcdmg));
-                        break;
-                    case MCDMGPS:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getMcdmgps));
-                        break;
-                    case DMGH:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getDmgh));
-                        break;
-                    case DMGD:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getDmgd));
-                        break;
-                    case S1:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getS1));
-                        break;
-                    case S2:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getS2));
-                        break;
-                    case S3:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getS3));
-                        break;
-                    case UPGRADES:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getUpgrades));
-                        break;
-                    case SCORE:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getScore));
-                        break;
-                    case BS:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getBs));
-                        break;
-                    case PRIORITY:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getPriority));
-                        break;
-                    case CONVERSIONS:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getConversions));
-                        break;
-                    case EQ:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getEq));
-                        break;
-                    default:
-                        System.err.println("INVALID COLUMN " + column);
-                }
-                break;
 
-            case DESC:
-                switch (column) {
-                    case ATK:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getAtk).reversed());
-                        break;
-                    case HP:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getHp).reversed());
-                        break;
-                    case DEF:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getDef).reversed());
-                        break;
-                    case SPD:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getSpd).reversed());
-                        break;
-                    case CR:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getCr).reversed());
-                        break;
-                    case CD:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getCd).reversed());
-                        break;
-                    case EFF:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getEff).reversed());
-                        break;
-                    case RES:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getRes).reversed());
-                        break;
-                    case DAC:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getDac).reversed());
-                        break;
-                    case CP:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getCp).reversed());
-                        break;
-                    case HPPS:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getHpps).reversed());
-                        break;
-                    case EHP:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getEhp).reversed());
-                        break;
-                    case EHPPS:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getEhpps).reversed());
-                        break;
-                    case DMG:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getDmg).reversed());
-                        break;
-                    case DMGPS:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getDmgps).reversed());
-                        break;
-                    case MCDMG:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getMcdmg).reversed());
-                        break;
-                    case MCDMGPS:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getMcdmgps).reversed());
-                        break;
-                    case DMGH:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getDmgh).reversed());
-                        break;
-                    case DMGD:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getDmgd).reversed());
-                        break;
-                    case S1:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getS1).reversed());
-                        break;
-                    case S2:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getS2).reversed());
-                        break;
-                    case S3:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getS3).reversed());
-                        break;
-                    case UPGRADES:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getUpgrades).reversed());
-                        break;
-                    case SCORE:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getScore).reversed());
-                        break;
-                    case BS:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getBs).reversed());
-                        break;
-                    case PRIORITY:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getPriority).reversed());
-                        break;
-                    case CONVERSIONS:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getConversions).reversed());
-                        break;
-                    case EQ:
-                        Arrays.sort(data, Comparator.comparingInt(HeroStats::getEq).reversed());
-                        break;
-                    default:
-                        System.err.println("INVALID COLUMN " + column);
-                }
-                break;
-            default:
-                System.err.println("INVALID ORDER " + order);
+        Comparator<HeroStats> comparator = getComparator(column);
+
+        if (order == SortOrder.DESC) {
+            comparator = comparator.reversed();
+        } else if (order != SortOrder.ASC) {
+            throw new IllegalArgumentException("Invalid sort order: " + order);
         }
+
+        Arrays.sort(data, comparator);
+    }
+
+    /**
+     * Returns a comparator that compares {@link HeroStats} based on the specified optimization column.
+     *
+     * @param column The optimization column by which to compare the heroes.
+     * @return A comparator that compares {@link HeroStats} based on the specified column.
+     * @throws IllegalStateException If the column is not recognized.
+     */
+    private static Comparator<HeroStats> getComparator(final OptimizationColumn column) {
+        return switch (column) {
+            case ATK -> Comparator.comparingInt(HeroStats::getAtk);
+            case HP -> Comparator.comparingInt(HeroStats::getHp);
+            case DEF -> Comparator.comparingInt(HeroStats::getDef);
+            case SPD -> Comparator.comparingInt(HeroStats::getSpd);
+            case CR -> Comparator.comparingInt(HeroStats::getCr);
+            case CD -> Comparator.comparingInt(HeroStats::getCd);
+            case EFF -> Comparator.comparingInt(HeroStats::getEff);
+            case RES -> Comparator.comparingInt(HeroStats::getRes);
+            case DAC -> Comparator.comparingInt(HeroStats::getDac);
+            case CP -> Comparator.comparingInt(HeroStats::getCp);
+            case HPPS -> Comparator.comparingInt(HeroStats::getHpps);
+            case EHP -> Comparator.comparingInt(HeroStats::getEhp);
+            case EHPPS -> Comparator.comparingInt(HeroStats::getEhpps);
+            case DMG -> Comparator.comparingInt(HeroStats::getDmg);
+            case DMGPS -> Comparator.comparingInt(HeroStats::getDmgps);
+            case MCDMG -> Comparator.comparingInt(HeroStats::getMcdmg);
+            case MCDMGPS -> Comparator.comparingInt(HeroStats::getMcdmgps);
+            case DMGH -> Comparator.comparingInt(HeroStats::getDmgh);
+            case DMGD -> Comparator.comparingInt(HeroStats::getDmgd);
+            case S1 -> Comparator.comparingInt(HeroStats::getS1);
+            case S2 -> Comparator.comparingInt(HeroStats::getS2);
+            case S3 -> Comparator.comparingInt(HeroStats::getS3);
+            case UPGRADES -> Comparator.comparingInt(HeroStats::getUpgrades);
+            case SCORE -> Comparator.comparingInt(HeroStats::getScore);
+            case BS -> Comparator.comparingInt(HeroStats::getBs);
+            case PRIORITY -> Comparator.comparingInt(HeroStats::getPriority);
+            case CONVERSIONS -> Comparator.comparingInt(HeroStats::getConversions);
+            case EQ -> Comparator.comparingInt(HeroStats::getEq);
+            default -> throw new IllegalStateException("Unexpected value: " + column);
+        };
     }
 }
