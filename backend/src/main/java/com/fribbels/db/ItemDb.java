@@ -1,13 +1,13 @@
 package com.fribbels.db;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.fribbels.handler.HeroesRequestHandler;
 import com.fribbels.model.AugmentedStats;
 import com.fribbels.model.Hero;
 import com.fribbels.model.Item;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
 
 public class ItemDb {
 
@@ -26,12 +26,19 @@ public class ItemDb {
     }
 
     public void addItems(final List<Item> newItems) {
+        // this.items = new ArrayList<>(this.items);
         final List<Item> validItems = newItems.stream()
                 .filter(this::isValid)
                 .map(this::calculateWss)
                 .toList();
+        this.items.addAll(validItems);
+    }
 
-        items.addAll(validItems);
+    public void addItem(final Item newItem) {
+        // this.items = new ArrayList<>(this.items);
+        if (this.isValid(newItem)) {
+            this.items.add(this.calculateWss(newItem));
+        }
     }
 
     public void setItems(final List<Item> newItems) {
@@ -40,33 +47,53 @@ public class ItemDb {
                 .map(this::calculateWss)
                 .toList();
 
-        items = validItems;
+        this.items = validItems;
     }
 
     public void replaceItems(final Item newItem) {
-        items = Stream.concat(items.stream().filter(item -> !item.getId().equals(newItem.getId())),
-                Stream.of(newItem)).filter(this::isValid).map(this::calculateWss).toList();
+        // Create new mutable list
+        final List<Item> updatedItems = new ArrayList<>(this.items.size()); // Optional: presize
+
+        // Add all items except the one being replaced
+        this.items.stream()
+                .filter(item -> !item.getId().equals(newItem.getId()))
+                .forEach(updatedItems::add);
+
+        // Add the new item
+        updatedItems.add(newItem);
+
+        // Apply filters and calculations
+        this.items = updatedItems.stream()
+                .filter(this::isValid)
+                .map(this::calculateWss)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    // public void replaceItems(final Item newItem) {
+    // this.items = Stream.concat(this.items.stream().filter(item ->
+    // !item.getId().equals(newItem.getId())),
+    // Stream.of(newItem)).filter(this::isValid).map(this::calculateWss).toList();
+    // }
+
     public List<Item> getAllItems() {
-        return items;
+        return this.items;
     }
 
     public Item calculateWss(final Item item) {
         final AugmentedStats stats = item.getAugmentedStats();
         final AugmentedStats reforgedStats = item.getReforgedStats() == null ? stats : item.getReforgedStats();
 
-        item.setWss((int) Math.round(calculateBaseWss(stats)));
-        item.setReforgedWss((int) Math.round(calculateBaseWss(reforgedStats)));
-        item.setDpsWss((int) Math.round(calculateDpsWss(reforgedStats)));
-        item.setSupportWss((int) Math.round(calculateSupportWss(reforgedStats)));
-        item.setCombatWss((int) Math.round(calculateCombatWss(reforgedStats)));
+        item.setWss((int) Math.round(this.calculateBaseWss(stats)));
+        item.setReforgedWss((int) Math.round(this.calculateBaseWss(reforgedStats)));
+        item.setDpsWss((int) Math.round(this.calculateDpsWss(reforgedStats)));
+        item.setSupportWss((int) Math.round(this.calculateSupportWss(reforgedStats)));
+        item.setCombatWss((int) Math.round(this.calculateCombatWss(reforgedStats)));
 
         return item;
     }
 
     public Item getItemById(final String id) {
-        return items.stream()
+        return this.items.stream()
                 .filter(x -> x.getId().equals(id))
                 .findFirst()
                 .orElse(null);
@@ -79,14 +106,14 @@ public class ItemDb {
     }
 
     public void unequipItem(final String id) {
-        final Item existingItem = getItemById(id);
+        final Item existingItem = this.getItemById(id);
 
         if (existingItem == null) {
             return;
         }
 
         final String previousOwnerId = existingItem.getEquippedById();
-        final Hero hero = heroDb.getHeroById(previousOwnerId);
+        final Hero hero = this.heroDb.getHeroById(previousOwnerId);
 
         if (hero != null) {
             hero.getEquipment().remove(existingItem.getGear());
@@ -101,24 +128,24 @@ public class ItemDb {
     }
 
     public void deleteItem(final String id) {
-        final Item existingItem = getItemById(id);
+        final Item existingItem = this.getItemById(id);
 
         if (existingItem == null)
             return;
 
         final String heroId = existingItem.getEquippedById();
-        final Hero hero = heroDb.getHeroById(heroId);
+        final Hero hero = this.heroDb.getHeroById(heroId);
 
         if (hero != null) {
             hero.getEquipment().remove(existingItem.getGear());
         }
 
-        items.removeIf(item -> item.getId().equals(id));
+        this.items.removeIf(item -> item.getId().equals(id));
     }
 
     public void equipItemOnHero(final String itemId, final String heroId) {
-        final Item item = getItemById(itemId);
-        final Hero hero = heroDb.getHeroById(heroId);
+        final Item item = this.getItemById(itemId);
+        final Hero hero = this.heroDb.getHeroById(heroId);
 
         if (item == null || hero == null) {
             return;
@@ -128,14 +155,14 @@ public class ItemDb {
 
         if (previousOwner != null && !previousOwner.equals(heroId)) {
             System.out.println("PREV OWNER" + previousOwner);
-            heroDb.getHeroById(previousOwner).getEquipment().remove(item.getGear());
+            this.heroDb.getHeroById(previousOwner).getEquipment().remove(item.getGear());
         }
 
         final Item previousItem = hero.switchItem(item);
 
         if (previousItem != null && !previousItem.getId().equals(item.getId())) {
             System.out.println("PREV ITEM" + previousItem);
-            unequipItem(previousItem.getId());
+            this.unequipItem(previousItem.getId());
         }
 
         hero.getEquipment().put(item.getGear(), item);

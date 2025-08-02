@@ -5,6 +5,7 @@ import com.fribbels.model.DamageMultipliers;
 import com.fribbels.model.Hero;
 import com.fribbels.model.HeroStats;
 import com.fribbels.request.OptimizationRequest;
+
 import lombok.Setter;
 
 @Setter
@@ -148,6 +149,7 @@ public class GpuOptimizerKernel extends Kernel {
 
     @Constant final float artifactHealth;
     @Constant final float artifactAttack;
+    @Constant final float artifactDefense;
 
     @Constant final int inputMinUpgradesLimit;
     @Constant final int inputMaxUpgradesLimit;
@@ -259,66 +261,67 @@ public class GpuOptimizerKernel extends Kernel {
         this.rSize = rSize;
         this.bSize = bSize;
 
-        inputAtkMinLimit = request.inputAtkMinLimit;
-        inputAtkMaxLimit = request.inputAtkMaxLimit;
-        inputDefMinLimit = request.inputDefMinLimit;
-        inputDefMaxLimit = request.inputDefMaxLimit;
-        inputHpMinLimit = request.inputHpMinLimit;
-        inputHpMaxLimit = request.inputHpMaxLimit;
-        inputSpdMinLimit = request.inputSpdMinLimit;
-        inputSpdMaxLimit = request.inputSpdMaxLimit;
-        inputCrMinLimit = request.inputCrMinLimit;
-        inputCrMaxLimit = request.inputCrMaxLimit;
-        inputCdMinLimit = request.inputCdMinLimit;
-        inputCdMaxLimit = request.inputCdMaxLimit;
-        inputEffMinLimit = request.inputEffMinLimit;
-        inputEffMaxLimit = request.inputEffMaxLimit;
-        inputResMinLimit = request.inputResMinLimit;
-        inputResMaxLimit = request.inputResMaxLimit;
-        inputMinCpLimit = request.inputMinCpLimit;
-        inputMaxCpLimit = request.inputMaxCpLimit;
-        inputMinHppsLimit = request.inputMinHppsLimit;
-        inputMaxHppsLimit = request.inputMaxHppsLimit;
-        inputMinEhpLimit = request.inputMinEhpLimit;
-        inputMaxEhpLimit = request.inputMaxEhpLimit;
-        inputMinEhppsLimit = request.inputMinEhppsLimit;
-        inputMaxEhppsLimit = request.inputMaxEhppsLimit;
-        inputMinDmgLimit = request.inputMinDmgLimit;
-        inputMaxDmgLimit = request.inputMaxDmgLimit;
-        inputMinDmgpsLimit = request.inputMinDmgpsLimit;
-        inputMaxDmgpsLimit = request.inputMaxDmgpsLimit;
-        inputMinMcdmgLimit = request.inputMinMcdmgLimit;
-        inputMaxMcdmgLimit = request.inputMaxMcdmgLimit;
-        inputMinMcdmgpsLimit = request.inputMinMcdmgpsLimit;
-        inputMaxMcdmgpsLimit = request.inputMaxMcdmgpsLimit;
+        this.inputAtkMinLimit = request.inputAtkMinLimit;
+        this.inputAtkMaxLimit = request.inputAtkMaxLimit;
+        this.inputDefMinLimit = request.inputDefMinLimit;
+        this.inputDefMaxLimit = request.inputDefMaxLimit;
+        this.inputHpMinLimit = request.inputHpMinLimit;
+        this.inputHpMaxLimit = request.inputHpMaxLimit;
+        this.inputSpdMinLimit = request.inputSpdMinLimit;
+        this.inputSpdMaxLimit = request.inputSpdMaxLimit;
+        this.inputCrMinLimit = request.inputCrMinLimit;
+        this.inputCrMaxLimit = request.inputCrMaxLimit;
+        this.inputCdMinLimit = request.inputCdMinLimit;
+        this.inputCdMaxLimit = request.inputCdMaxLimit;
+        this.inputEffMinLimit = request.inputEffMinLimit;
+        this.inputEffMaxLimit = request.inputEffMaxLimit;
+        this.inputResMinLimit = request.inputResMinLimit;
+        this.inputResMaxLimit = request.inputResMaxLimit;
+        this.inputMinCpLimit = request.inputMinCpLimit;
+        this.inputMaxCpLimit = request.inputMaxCpLimit;
+        this.inputMinHppsLimit = request.inputMinHppsLimit;
+        this.inputMaxHppsLimit = request.inputMaxHppsLimit;
+        this.inputMinEhpLimit = request.inputMinEhpLimit;
+        this.inputMaxEhpLimit = request.inputMaxEhpLimit;
+        this.inputMinEhppsLimit = request.inputMinEhppsLimit;
+        this.inputMaxEhppsLimit = request.inputMaxEhppsLimit;
+        this.inputMinDmgLimit = request.inputMinDmgLimit;
+        this.inputMaxDmgLimit = request.inputMaxDmgLimit;
+        this.inputMinDmgpsLimit = request.inputMinDmgpsLimit;
+        this.inputMaxDmgpsLimit = request.inputMaxDmgpsLimit;
+        this.inputMinMcdmgLimit = request.inputMinMcdmgLimit;
+        this.inputMaxMcdmgLimit = request.inputMaxMcdmgLimit;
+        this.inputMinMcdmgpsLimit = request.inputMinMcdmgpsLimit;
+        this.inputMaxMcdmgpsLimit = request.inputMaxMcdmgpsLimit;
 
-        inputMinDmgHLimit = request.inputMinDmgHLimit;
-        inputMaxDmgHLimit = request.inputMaxDmgHLimit;
-        inputMinDmgDLimit = request.inputMinDmgDLimit;
-        inputMaxDmgDLimit = request.inputMaxDmgDLimit;
+        this.inputMinDmgHLimit = request.inputMinDmgHLimit;
+        this.inputMaxDmgHLimit = request.inputMaxDmgHLimit;
+        this.inputMinDmgDLimit = request.inputMinDmgDLimit;
+        this.inputMaxDmgDLimit = request.inputMaxDmgDLimit;
 
-        inputMinS1Limit = request.inputMinS1Limit;
-        inputMaxS1Limit = request.inputMaxS1Limit;
-        inputMinS2Limit = request.inputMinS2Limit;
-        inputMaxS2Limit = request.inputMaxS2Limit;
-        inputMinS3Limit = request.inputMinS3Limit;
-        inputMaxS3Limit = request.inputMaxS3Limit;
+        this.inputMinS1Limit = request.inputMinS1Limit;
+        this.inputMaxS1Limit = request.inputMaxS1Limit;
+        this.inputMinS2Limit = request.inputMinS2Limit;
+        this.inputMaxS2Limit = request.inputMaxS2Limit;
+        this.inputMinS3Limit = request.inputMinS3Limit;
+        this.inputMaxS3Limit = request.inputMaxS3Limit;
 
-        artifactAttack = request.hero.getArtifactAttack();
-        artifactHealth = request.hero.getArtifactHealth();
+        this.artifactAttack = request.hero.getArtifactAttack();
+        this.artifactHealth = request.hero.getArtifactHealth();
+        this.artifactDefense = request.hero.getArtifactDefense();
 
-        inputMinUpgradesLimit = request.inputMinUpgradesLimit;
-        inputMaxUpgradesLimit = request.inputMaxUpgradesLimit;
-        inputMinConversionsLimit = request.inputMinConversionsLimit;
-        inputMaxConversionsLimit = request.inputMaxConversionsLimit;
-        inputMinEquippedLimit = request.inputMinEquippedLimit;
-        inputMaxEquippedLimit = request.inputMaxEquippedLimit;
-        inputMinScoreLimit = request.inputMinScoreLimit;
-        inputMaxScoreLimit = request.inputMaxScoreLimit;
-        inputMinBSLimit = request.inputMinBSLimit;
-        inputMaxBSLimit = request.inputMaxBSLimit;
-        inputMinPriorityLimit = request.inputMinPriorityLimit;
-        inputMaxPriorityLimit = request.inputMaxPriorityLimit;
+        this.inputMinUpgradesLimit = request.inputMinUpgradesLimit;
+        this.inputMaxUpgradesLimit = request.inputMaxUpgradesLimit;
+        this.inputMinConversionsLimit = request.inputMinConversionsLimit;
+        this.inputMaxConversionsLimit = request.inputMaxConversionsLimit;
+        this.inputMinEquippedLimit = request.inputMinEquippedLimit;
+        this.inputMaxEquippedLimit = request.inputMaxEquippedLimit;
+        this.inputMinScoreLimit = request.inputMinScoreLimit;
+        this.inputMaxScoreLimit = request.inputMaxScoreLimit;
+        this.inputMinBSLimit = request.inputMinBSLimit;
+        this.inputMaxBSLimit = request.inputMaxBSLimit;
+        this.inputMinPriorityLimit = request.inputMinPriorityLimit;
+        this.inputMaxPriorityLimit = request.inputMaxPriorityLimit;
 
 //        s1SelfSpdScaling = hero
 
@@ -330,32 +333,32 @@ public class GpuOptimizerKernel extends Kernel {
 
         final DamageMultipliers dm = hero.getDamageMultipliers();
 
-        this.rate = floatArr(dm.getRate());
-        this.pow = floatArr(dm.getPow());
-        this.targets = flattenTargets(dm.getTargets());
-        this.selfHpScaling = floatArr(dm.getSelfHpScaling());
-        this.selfAtkScaling = floatArr(dm.getSelfAtkScaling());
-        this.selfDefScaling = floatArr(dm.getSelfDefScaling());
-        this.selfSpdScaling = floatArr(dm.getSelfSpdScaling());
-        this.constantValue = floatArr(dm.getConstantValue());
-        this.selfAtkConstantValue = floatArr(dm.getSelfAtkConstantValue());
-        this.increasedValue = floatArr(dm.getIncreasedValue());
-        this.defDiffPen = floatArr(dm.getDefDiffPen());
-        this.defDiffPenMax = floatArr(dm.getDefDiffPenMax());
-        this.atkDiffPen = floatArr(dm.getAtkDiffPen());
-        this.atkDiffPenMax = floatArr(dm.getAtkDiffPenMax());
-        this.spdDiffPen = floatArr(dm.getSpdDiffPen());
-        this.spdDiffPenMax = floatArr(dm.getSpdDiffPenMax());
-        this.penetration = floatArr(dm.getPenetration());
-        this.atkIncrease = floatArr(dm.getAtkIncrease());
-        this.cdmgIncrease = floatArr(dm.getCdmgIncrease());
-        this.crit = floatArr(dm.getCrit());
-        this.damage = floatArr(dm.getDamage());
-        this.support = floatArr(dm.getSupport());
-        this.hitMulti = floatArr(dm.getHitMulti());
-        this.extraSelfAtkScaling = floatArr(dm.getExtraSelfAtkScaling());
-        this.extraSelfDefScaling = floatArr(dm.getExtraSelfDefScaling());
-        this.extraSelfHpScaling = floatArr(dm.getExtraSelfHpScaling());
+        this.rate = this.floatArr(dm.getRate());
+        this.pow = this.floatArr(dm.getPow());
+        this.targets = this.flattenTargets(dm.getTargets());
+        this.selfHpScaling = this.floatArr(dm.getSelfHpScaling());
+        this.selfAtkScaling = this.floatArr(dm.getSelfAtkScaling());
+        this.selfDefScaling = this.floatArr(dm.getSelfDefScaling());
+        this.selfSpdScaling = this.floatArr(dm.getSelfSpdScaling());
+        this.constantValue = this.floatArr(dm.getConstantValue());
+        this.selfAtkConstantValue = this.floatArr(dm.getSelfAtkConstantValue());
+        this.increasedValue = this.floatArr(dm.getIncreasedValue());
+        this.defDiffPen = this.floatArr(dm.getDefDiffPen());
+        this.defDiffPenMax = this.floatArr(dm.getDefDiffPenMax());
+        this.atkDiffPen = this.floatArr(dm.getAtkDiffPen());
+        this.atkDiffPenMax = this.floatArr(dm.getAtkDiffPenMax());
+        this.spdDiffPen = this.floatArr(dm.getSpdDiffPen());
+        this.spdDiffPenMax = this.floatArr(dm.getSpdDiffPenMax());
+        this.penetration = this.floatArr(dm.getPenetration());
+        this.atkIncrease = this.floatArr(dm.getAtkIncrease());
+        this.cdmgIncrease = this.floatArr(dm.getCdmgIncrease());
+        this.crit = this.floatArr(dm.getCrit());
+        this.damage = this.floatArr(dm.getDamage());
+        this.support = this.floatArr(dm.getSupport());
+        this.hitMulti = this.floatArr(dm.getHitMulti());
+        this.extraSelfAtkScaling = this.floatArr(dm.getExtraSelfAtkScaling());
+        this.extraSelfDefScaling = this.floatArr(dm.getExtraSelfDefScaling());
+        this.extraSelfHpScaling = this.floatArr(dm.getExtraSelfHpScaling());
     }
 
     private float[] floatArr(final Float[] arr) {
@@ -369,7 +372,7 @@ public class GpuOptimizerKernel extends Kernel {
         if (arr == null) {
             return new int[]{0, 0, 0};
         }
-        return new int[]{zeroOrOne(arr[0]), zeroOrOne(arr[1]), zeroOrOne(arr[2])};
+        return new int[]{this.zeroOrOne(arr[0]), this.zeroOrOne(arr[1]), this.zeroOrOne(arr[2])};
     }
 
     private int zeroOrOne(final int i) {
@@ -380,121 +383,121 @@ public class GpuOptimizerKernel extends Kernel {
     }
 
 
-    int oneIfNegativeElseZero(int a) {
+    int oneIfNegativeElseZero(final int a) {
         return ((a ^ 1) >> 31) * -1;
     }
-    int negativeOneIfNegativeElseZero(int a) {
+    int negativeOneIfNegativeElseZero(final int a) {
         return (a  ^ 1) >> 31;
     }
 
     @Override
     public void run() {
-        final int id = getGlobalId();
+        final int id = this.getGlobalId();
 
-        final long i = max * iteration + id;
-        if (i < wSize * hSize * aSize * nSize * rSize * bSize) {
-            final long b = i % bSize;
-            final long r = ( ( i - b ) / bSize ) %  rSize;
-            final long n = ( ( i - r * bSize - b ) / (bSize * rSize) ) % nSize;
-            final long a = ( ( i - n * rSize * bSize - r * bSize - b ) / (bSize * rSize * nSize) ) % aSize;
-            final long h = ( ( i - a * nSize * rSize * bSize - n * rSize * bSize - r * bSize - b) / (bSize * rSize * nSize * aSize) ) % hSize;
-            final long w = ( ( i - h * aSize * nSize * rSize * bSize - a * nSize * rSize * bSize - n * rSize * bSize - r * bSize - b) / (bSize * rSize * nSize * aSize * hSize) ) % wSize;
+        final long i = this.max * this.iteration + id;
+        if (i < this.wSize * this.hSize * this.aSize * this.nSize * this.rSize * this.bSize) {
+            final long b = i % this.bSize;
+            final long r = ( ( i - b ) / this.bSize ) %  this.rSize;
+            final long n = ( ( i - r * this.bSize - b ) / (this.bSize * this.rSize) ) % this.nSize;
+            final long a = ( ( i - n * this.rSize * this.bSize - r * this.bSize - b ) / (this.bSize * this.rSize * this.nSize) ) % this.aSize;
+            final long h = ( ( i - a * this.nSize * this.rSize * this.bSize - n * this.rSize * this.bSize - r * this.bSize - b) / (this.bSize * this.rSize * this.nSize * this.aSize) ) % this.hSize;
+            final long w = ( ( i - h * this.aSize * this.nSize * this.rSize * this.bSize - a * this.nSize * this.rSize * this.bSize - n * this.rSize * this.bSize - r * this.bSize - b) / (this.bSize * this.rSize * this.nSize * this.aSize * this.hSize) ) % this.wSize;
 
-            final int wargSize = (int)(w * argSize);
-            final float wAtk =   flattenedWeaponAccs[wargSize];
-            final float wHp =    flattenedWeaponAccs[wargSize + 1];
-            final float wDef =   flattenedWeaponAccs[wargSize + 2];
-            final float wCr =    flattenedWeaponAccs[wargSize + 6];
-            final float wCd =    flattenedWeaponAccs[wargSize + 7];
-            final float wEff =   flattenedWeaponAccs[wargSize + 8];
-            final float wRes =   flattenedWeaponAccs[wargSize + 9];
-            final float wSpeed = flattenedWeaponAccs[wargSize + 10];
-            final float wScore = flattenedWeaponAccs[wargSize + 11];
-            final float wSet =   flattenedWeaponAccs[wargSize + 12];
-            final float wPrio =  flattenedWeaponAccs[wargSize + 13];
-            final float wUpg =   flattenedWeaponAccs[wargSize + 14];
-            final float wConv =  flattenedWeaponAccs[wargSize + 15];
-            final float wEq =    flattenedWeaponAccs[wargSize + 16];
+            final int wargSize = (int)(w * this.argSize);
+            final float wAtk =   this.flattenedWeaponAccs[wargSize];
+            final float wHp =    this.flattenedWeaponAccs[wargSize + 1];
+            final float wDef =   this.flattenedWeaponAccs[wargSize + 2];
+            final float wCr =    this.flattenedWeaponAccs[wargSize + 6];
+            final float wCd =    this.flattenedWeaponAccs[wargSize + 7];
+            final float wEff =   this.flattenedWeaponAccs[wargSize + 8];
+            final float wRes =   this.flattenedWeaponAccs[wargSize + 9];
+            final float wSpeed = this.flattenedWeaponAccs[wargSize + 10];
+            final float wScore = this.flattenedWeaponAccs[wargSize + 11];
+            final float wSet =   this.flattenedWeaponAccs[wargSize + 12];
+            final float wPrio =  this.flattenedWeaponAccs[wargSize + 13];
+            final float wUpg =   this.flattenedWeaponAccs[wargSize + 14];
+            final float wConv =  this.flattenedWeaponAccs[wargSize + 15];
+            final float wEq =    this.flattenedWeaponAccs[wargSize + 16];
 
-            final int hargSize = (int)(h * argSize);
-            final float hAtk =   flattenedHelmetAccs[hargSize];
-            final float hHp =    flattenedHelmetAccs[hargSize + 1];
-            final float hDef =   flattenedHelmetAccs[hargSize + 2];
-            final float hCr =    flattenedHelmetAccs[hargSize + 6];
-            final float hCd =    flattenedHelmetAccs[hargSize + 7];
-            final float hEff =   flattenedHelmetAccs[hargSize + 8];
-            final float hRes =   flattenedHelmetAccs[hargSize + 9];
-            final float hSpeed = flattenedHelmetAccs[hargSize + 10];
-            final float hScore = flattenedHelmetAccs[hargSize + 11];
-            final float hSet =   flattenedHelmetAccs[hargSize + 12];
-            final float hPrio =  flattenedHelmetAccs[hargSize + 13];
-            final float hUpg =   flattenedHelmetAccs[hargSize + 14];
-            final float hConv =  flattenedHelmetAccs[hargSize + 15];
-            final float hEq =    flattenedHelmetAccs[hargSize + 16];
+            final int hargSize = (int)(h * this.argSize);
+            final float hAtk =   this.flattenedHelmetAccs[hargSize];
+            final float hHp =    this.flattenedHelmetAccs[hargSize + 1];
+            final float hDef =   this.flattenedHelmetAccs[hargSize + 2];
+            final float hCr =    this.flattenedHelmetAccs[hargSize + 6];
+            final float hCd =    this.flattenedHelmetAccs[hargSize + 7];
+            final float hEff =   this.flattenedHelmetAccs[hargSize + 8];
+            final float hRes =   this.flattenedHelmetAccs[hargSize + 9];
+            final float hSpeed = this.flattenedHelmetAccs[hargSize + 10];
+            final float hScore = this.flattenedHelmetAccs[hargSize + 11];
+            final float hSet =   this.flattenedHelmetAccs[hargSize + 12];
+            final float hPrio =  this.flattenedHelmetAccs[hargSize + 13];
+            final float hUpg =   this.flattenedHelmetAccs[hargSize + 14];
+            final float hConv =  this.flattenedHelmetAccs[hargSize + 15];
+            final float hEq =    this.flattenedHelmetAccs[hargSize + 16];
 
-            final int aargSize = (int)(a * argSize);
-            final float aAtk =   flattenedArmorAccs[aargSize];
-            final float aHp =    flattenedArmorAccs[aargSize + 1];
-            final float aDef =   flattenedArmorAccs[aargSize + 2];
-            final float aCr =    flattenedArmorAccs[aargSize + 6];
-            final float aCd =    flattenedArmorAccs[aargSize + 7];
-            final float aEff =   flattenedArmorAccs[aargSize + 8];
-            final float aRes =   flattenedArmorAccs[aargSize + 9];
-            final float aSpeed = flattenedArmorAccs[aargSize + 10];
-            final float aScore = flattenedArmorAccs[aargSize + 11];
-            final float aSet =   flattenedArmorAccs[aargSize + 12];
-            final float aPrio =  flattenedArmorAccs[aargSize + 13];
-            final float aUpg =   flattenedArmorAccs[aargSize + 14];
-            final float aConv =  flattenedArmorAccs[aargSize + 15];
-            final float aEq =    flattenedArmorAccs[aargSize + 16];
+            final int aargSize = (int)(a * this.argSize);
+            final float aAtk =   this.flattenedArmorAccs[aargSize];
+            final float aHp =    this.flattenedArmorAccs[aargSize + 1];
+            final float aDef =   this.flattenedArmorAccs[aargSize + 2];
+            final float aCr =    this.flattenedArmorAccs[aargSize + 6];
+            final float aCd =    this.flattenedArmorAccs[aargSize + 7];
+            final float aEff =   this.flattenedArmorAccs[aargSize + 8];
+            final float aRes =   this.flattenedArmorAccs[aargSize + 9];
+            final float aSpeed = this.flattenedArmorAccs[aargSize + 10];
+            final float aScore = this.flattenedArmorAccs[aargSize + 11];
+            final float aSet =   this.flattenedArmorAccs[aargSize + 12];
+            final float aPrio =  this.flattenedArmorAccs[aargSize + 13];
+            final float aUpg =   this.flattenedArmorAccs[aargSize + 14];
+            final float aConv =  this.flattenedArmorAccs[aargSize + 15];
+            final float aEq =    this.flattenedArmorAccs[aargSize + 16];
 
-            final int nargSize = (int)(n * argSize);
-            final float nAtk =   flattenedNecklaceAccs[nargSize];
-            final float nHp =    flattenedNecklaceAccs[nargSize + 1];
-            final float nDef =   flattenedNecklaceAccs[nargSize + 2];
-            final float nCr =    flattenedNecklaceAccs[nargSize + 6];
-            final float nCd =    flattenedNecklaceAccs[nargSize + 7];
-            final float nEff =   flattenedNecklaceAccs[nargSize + 8];
-            final float nRes =   flattenedNecklaceAccs[nargSize + 9];
-            final float nSpeed = flattenedNecklaceAccs[nargSize + 10];
-            final float nScore = flattenedNecklaceAccs[nargSize + 11];
-            final float nSet =   flattenedNecklaceAccs[nargSize + 12];
-            final float nPrio =  flattenedNecklaceAccs[nargSize + 13];
-            final float nUpg =   flattenedNecklaceAccs[nargSize + 14];
-            final float nConv =  flattenedNecklaceAccs[nargSize + 15];
-            final float nEq =    flattenedNecklaceAccs[nargSize + 16];
+            final int nargSize = (int)(n * this.argSize);
+            final float nAtk =   this.flattenedNecklaceAccs[nargSize];
+            final float nHp =    this.flattenedNecklaceAccs[nargSize + 1];
+            final float nDef =   this.flattenedNecklaceAccs[nargSize + 2];
+            final float nCr =    this.flattenedNecklaceAccs[nargSize + 6];
+            final float nCd =    this.flattenedNecklaceAccs[nargSize + 7];
+            final float nEff =   this.flattenedNecklaceAccs[nargSize + 8];
+            final float nRes =   this.flattenedNecklaceAccs[nargSize + 9];
+            final float nSpeed = this.flattenedNecklaceAccs[nargSize + 10];
+            final float nScore = this.flattenedNecklaceAccs[nargSize + 11];
+            final float nSet =   this.flattenedNecklaceAccs[nargSize + 12];
+            final float nPrio =  this.flattenedNecklaceAccs[nargSize + 13];
+            final float nUpg =   this.flattenedNecklaceAccs[nargSize + 14];
+            final float nConv =  this.flattenedNecklaceAccs[nargSize + 15];
+            final float nEq =    this.flattenedNecklaceAccs[nargSize + 16];
 
-            final int rargSize = (int)(r * argSize);
-            final float rAtk =   flattenedRingAccs[rargSize];
-            final float rHp =    flattenedRingAccs[rargSize + 1];
-            final float rDef =   flattenedRingAccs[rargSize + 2];
-            final float rCr =    flattenedRingAccs[rargSize + 6];
-            final float rCd =    flattenedRingAccs[rargSize + 7];
-            final float rEff =   flattenedRingAccs[rargSize + 8];
-            final float rRes =   flattenedRingAccs[rargSize + 9];
-            final float rSpeed = flattenedRingAccs[rargSize + 10];
-            final float rScore = flattenedRingAccs[rargSize + 11];
-            final float rSet =   flattenedRingAccs[rargSize + 12];
-            final float rPrio =  flattenedRingAccs[rargSize + 13];
-            final float rUpg =   flattenedRingAccs[rargSize + 14];
-            final float rConv =  flattenedRingAccs[rargSize + 15];
-            final float rEq =    flattenedRingAccs[rargSize + 16];
+            final int rargSize = (int)(r * this.argSize);
+            final float rAtk =   this.flattenedRingAccs[rargSize];
+            final float rHp =    this.flattenedRingAccs[rargSize + 1];
+            final float rDef =   this.flattenedRingAccs[rargSize + 2];
+            final float rCr =    this.flattenedRingAccs[rargSize + 6];
+            final float rCd =    this.flattenedRingAccs[rargSize + 7];
+            final float rEff =   this.flattenedRingAccs[rargSize + 8];
+            final float rRes =   this.flattenedRingAccs[rargSize + 9];
+            final float rSpeed = this.flattenedRingAccs[rargSize + 10];
+            final float rScore = this.flattenedRingAccs[rargSize + 11];
+            final float rSet =   this.flattenedRingAccs[rargSize + 12];
+            final float rPrio =  this.flattenedRingAccs[rargSize + 13];
+            final float rUpg =   this.flattenedRingAccs[rargSize + 14];
+            final float rConv =  this.flattenedRingAccs[rargSize + 15];
+            final float rEq =    this.flattenedRingAccs[rargSize + 16];
 
-            final int bargSize = (int)(b * argSize);
-            final float bAtk =   flattenedBootAccs[bargSize];
-            final float bHp =    flattenedBootAccs[bargSize + 1];
-            final float bDef =   flattenedBootAccs[bargSize + 2];
-            final float bCr =    flattenedBootAccs[bargSize + 6];
-            final float bCd =    flattenedBootAccs[bargSize + 7];
-            final float bEff =   flattenedBootAccs[bargSize + 8];
-            final float bRes =   flattenedBootAccs[bargSize + 9];
-            final float bSpeed = flattenedBootAccs[bargSize + 10];
-            final float bScore = flattenedBootAccs[bargSize + 11];
-            final float bSet =   flattenedBootAccs[bargSize + 12];
-            final float bPrio =  flattenedBootAccs[bargSize + 13];
-            final float bUpg =   flattenedBootAccs[bargSize + 14];
-            final float bConv =  flattenedBootAccs[bargSize + 15];
-            final float bEq =    flattenedBootAccs[bargSize + 16];
+            final int bargSize = (int)(b * this.argSize);
+            final float bAtk =   this.flattenedBootAccs[bargSize];
+            final float bHp =    this.flattenedBootAccs[bargSize + 1];
+            final float bDef =   this.flattenedBootAccs[bargSize + 2];
+            final float bCr =    this.flattenedBootAccs[bargSize + 6];
+            final float bCd =    this.flattenedBootAccs[bargSize + 7];
+            final float bEff =   this.flattenedBootAccs[bargSize + 8];
+            final float bRes =   this.flattenedBootAccs[bargSize + 9];
+            final float bSpeed = this.flattenedBootAccs[bargSize + 10];
+            final float bScore = this.flattenedBootAccs[bargSize + 11];
+            final float bSet =   this.flattenedBootAccs[bargSize + 12];
+            final float bPrio =  this.flattenedBootAccs[bargSize + 13];
+            final float bUpg =   this.flattenedBootAccs[bargSize + 14];
+            final float bConv =  this.flattenedBootAccs[bargSize + 15];
+            final float bEq =    this.flattenedBootAccs[bargSize + 16];
 
             final int iWset = (int)wSet;
             final int iHset = (int)hSet;
@@ -546,39 +549,39 @@ public class GpuOptimizerKernel extends Kernel {
 
             //            debug[id] = min(1, longSetMasks[setIndex] & (1 << 7));
 
-            final int hpSet = min(1, setSolutionBitMasks[setIndex] & (1)) + min(1, setSolutionBitMasks[setIndex] & (1 << 1)) + min(1, setSolutionBitMasks[setIndex] & (1 << 2));
-            final int defSet = min(1, setSolutionBitMasks[setIndex] & (1 << 3)) + min(1, setSolutionBitMasks[setIndex] & (1 << 4)) + min(1, setSolutionBitMasks[setIndex] & (1 << 5));
-            final int atkSet = min(1, setSolutionBitMasks[setIndex] & (1 << 6));
-            final int speedSet = min(1, setSolutionBitMasks[setIndex] & (1 << 7));
-            final int crSet = min(1, setSolutionBitMasks[setIndex] & (1 << 8)) + min(1, setSolutionBitMasks[setIndex] & (1 << 9)) + min(1, setSolutionBitMasks[setIndex] & (1 << 10));
-            final int effSet = min(1, setSolutionBitMasks[setIndex] & (1 << 11)) + min(1, setSolutionBitMasks[setIndex] & (1 << 12)) + min(1, setSolutionBitMasks[setIndex] & (1 << 13));
-            final int cdSet = min(1, setSolutionBitMasks[setIndex] & (1 << 14));
-            final int resSet = min(1, setSolutionBitMasks[setIndex] & (1 << 17)) + min(1, setSolutionBitMasks[setIndex] & (1 << 18)) + min(1, setSolutionBitMasks[setIndex] & (1 << 19));
-            final int rageSet = min(1, setSolutionBitMasks[setIndex] & (1 << 21));
-            final int penSet = min(1, setSolutionBitMasks[setIndex] & (1 << 23));
-            final int revengeSet = min(1, setSolutionBitMasks[setIndex] & (1 << 24));
+            final int hpSet = this.min(1, this.setSolutionBitMasks[setIndex] & (1)) + this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 1)) + this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 2));
+            final int defSet = this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 3)) + this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 4)) + this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 5));
+            final int atkSet = this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 6));
+            final int speedSet = this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 7));
+            final int crSet = this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 8)) + this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 9)) + this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 10));
+            final int effSet = this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 11)) + this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 12)) + this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 13));
+            final int cdSet = this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 14));
+            final int resSet = this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 17)) + this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 18)) + this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 19));
+            final int rageSet = this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 21));
+            final int penSet = this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 23));
+            final int revengeSet = this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 24));
 //            final int protectionSet = min(1, setSolutionBitMasks[setIndex] & (1 << 25));
 //            final int injurySet = min(1, setSolutionBitMasks[setIndex] & (1 << 26));
-            final int torrentSet = min(1, setSolutionBitMasks[setIndex] & (1 << 27)) + min(1, setSolutionBitMasks[setIndex] & (1 << 28)) + min(1, setSolutionBitMasks[setIndex] & (1 << 29));
+            final int torrentSet = this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 27)) + this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 28)) + this.min(1, this.setSolutionBitMasks[setIndex] & (1 << 29));
 
-            final float atk =  ((bonusBaseAtk  + wAtk+hAtk+aAtk+nAtk+rAtk+bAtk + (atkSet * atkSetBonus)) * bonusMaxAtk);
-            final float hp =   ((bonusBaseHp   + wHp+hHp+aHp+nHp+rHp+bHp + (hpSet * hpSetBonus + torrentSet * hpSetBonus/-2)) * bonusMaxHp);
-            final float def =  ((bonusBaseDef  + wDef+hDef+aDef+nDef+rDef+bDef + (defSet * defSetBonus)) * bonusMaxDef);
-            final int cr =     (int) (baseCr + wCr+hCr+aCr+nCr+rCr+bCr + (crSet * 12) + bonusCr + aeiCr);
-            final int cd =     (int) (baseCd + wCd+hCd+aCd+nCd+rCd+bCd + (cdSet * 60) + bonusCd + aeiCd);
-            final int eff =    (int) (baseEff   + wEff+hEff+aEff+nEff+rEff+bEff + (effSet * 20) + bonusEff + aeiEff);
-            final int res =    (int) (baseRes   + wRes+hRes+aRes+nRes+rRes+bRes + (resSet * 20) + bonusRes + aeiRes);
-            final int spd =    (int) (baseSpeed + wSpeed+hSpeed+aSpeed+nSpeed+rSpeed+bSpeed + (speedSet * speedSetBonus) + (revengeSet * revengeSetBonus) + bonusSpeed + aeiSpeed);
+            final float atk =  ((this.bonusBaseAtk  + wAtk+hAtk+aAtk+nAtk+rAtk+bAtk + (atkSet * this.atkSetBonus)) * this.bonusMaxAtk);
+            final float hp =   ((this.bonusBaseHp   + wHp+hHp+aHp+nHp+rHp+bHp + (hpSet * this.hpSetBonus + torrentSet * this.hpSetBonus/-2)) * this.bonusMaxHp);
+            final float def =  ((this.bonusBaseDef  + wDef+hDef+aDef+nDef+rDef+bDef + (defSet * this.defSetBonus)) * this.bonusMaxDef);
+            final int cr =     (int) (this.baseCr + wCr+hCr+aCr+nCr+rCr+bCr + (crSet * 12) + this.bonusCr + this.aeiCr);
+            final int cd =     (int) (this.baseCd + wCd+hCd+aCd+nCd+rCd+bCd + (cdSet * 60) + this.bonusCd + this.aeiCd);
+            final int eff =    (int) (this.baseEff   + wEff+hEff+aEff+nEff+rEff+bEff + (effSet * 20) + this.bonusEff + this.aeiEff);
+            final int res =    (int) (this.baseRes   + wRes+hRes+aRes+nRes+rRes+bRes + (resSet * 20) + this.bonusRes + this.aeiRes);
+            final int spd =    (int) (this.baseSpeed + wSpeed+hSpeed+aSpeed+nSpeed+rSpeed+bSpeed + (speedSet * this.speedSetBonus) + (revengeSet * this.revengeSetBonus) + this.bonusSpeed + this.aeiSpeed);
 
-            final float critRate = min(100, cr) / 100f;
-            final float critDamage = min(350, cd) / 100f;
+            final float critRate = this.min(100, cr) / 100f;
+            final float critDamage = this.min(350, cd) / 100f;
 
             final int cp = (int) (((atk * 1.6f + atk * 1.6f * critRate * critDamage) * (1.0 + (spd - 45f) * 0.02f) + hp + def * 9.3f) * (1f + (res/100f + eff/100f) / 4f));
 
-            final float penSetOn = min(penSet, 1);
-            final float rageMultiplier = max(0, rageSet * SETTING_RAGE_SET * 0.3f);
-            final float penMultiplier = max(1, penSetOn * SETTING_PEN_SET * penSetDmgBonus);
-            final float torrentMultiplier = max(0, torrentSet * 0.1f);
+            final float penSetOn = this.min(penSet, 1);
+            final float rageMultiplier = this.max(0, rageSet * this.SETTING_RAGE_SET * 0.3f);
+            final float penMultiplier = this.max(1, penSetOn * this.SETTING_PEN_SET * this.penSetDmgBonus);
+            final float torrentMultiplier = this.max(0, torrentSet * 0.1f);
             final float spdDiv1000 = (float)spd/1000;
             final float pctDmgMultiplier = 1 + rageMultiplier + torrentMultiplier;
 
@@ -592,9 +595,9 @@ public class GpuOptimizerKernel extends Kernel {
             final int dmgh = (int) ((critDamage * hp * penMultiplier * pctDmgMultiplier)/10);
             final int dmgd = (int) ((critDamage * def * penMultiplier * pctDmgMultiplier));
 
-            final int s1 = getSkillValue(0, atk, def, hp, spd, critDamage, pctDmgMultiplier, penSetOn);
-            final int s2 = getSkillValue(1, atk, def, hp, spd, critDamage, pctDmgMultiplier, penSetOn);
-            final int s3 = getSkillValue(2, atk, def, hp, spd, critDamage, pctDmgMultiplier, penSetOn);
+            final int s1 = this.getSkillValue(0, atk, def, hp, spd, critDamage, pctDmgMultiplier, penSetOn);
+            final int s2 = this.getSkillValue(1, atk, def, hp, spd, critDamage, pctDmgMultiplier, penSetOn);
+            final int s3 = this.getSkillValue(2, atk, def, hp, spd, critDamage, pctDmgMultiplier, penSetOn);
 
 // {1.871 * [(ATK)(Atkmod)(Rate)+(FlatMod)]} * (pow!)(EnhanceMod)(HitTypeMod)(ElementMod)(DamageUpMod)(TargetDebuffMod)
             // flatmod
@@ -622,14 +625,14 @@ public class GpuOptimizerKernel extends Kernel {
             final int conversions = (int) (wConv+hConv+aConv+nConv+rConv+bConv);
             final int eq = (int) (wEq+hEq+aEq+nEq+rEq+bEq);
 
-            final float bsHp = (hp - baseHp - artifactHealth - (hpSet * hpSetBonus) + (torrentSet * hpSetBonus/2)) / baseHp * 100;
-            final float bsAtk = (atk - baseAtk - artifactAttack - (atkSet * atkSetBonus)) / baseAtk * 100;
-            final float bsDef = (def - baseDef - (defSet * defSetBonus)) / baseDef * 100;
-            final float bsCr = (cr - baseCr - (crSet * 12));
-            final float bsCd = (cd - baseCd - (cdSet * 60));
-            final float bsEff = (eff - baseEff - (effSet * 20));
-            final float bsRes = (res - baseRes - (resSet * 20));
-            final float bsSpd = (spd - baseSpeed - (speedSet * speedSetBonus) - (revengeSet * revengeSetBonus));
+            final float bsHp = (hp - this.baseHp - this.artifactHealth - (hpSet * this.hpSetBonus) + (torrentSet * this.hpSetBonus/2)) / this.baseHp * 100;
+            final float bsAtk = (atk - this.baseAtk - this.artifactAttack - (atkSet * this.atkSetBonus)) / this.baseAtk * 100;
+            final float bsDef = (def - this.baseDef - this.artifactDefense - (defSet * this.defSetBonus)) / this.baseDef * 100;
+            final float bsCr = (cr - this.baseCr - (crSet * 12));
+            final float bsCd = (cd - this.baseCd - (cdSet * 60));
+            final float bsEff = (eff - this.baseEff - (effSet * 20));
+            final float bsRes = (res - this.baseRes - (resSet * 20));
+            final float bsSpd = (spd - this.baseSpeed - (speedSet * this.speedSetBonus) - (revengeSet * this.revengeSetBonus));
 
 //            final float atk =  ((bonusBaseAtk  + wAtk+hAtk+aAtk+nAtk+rAtk+bAtk + (atkSet * atkSetBonus)) * bonusMaxAtk);
 //            final float hp =   ((bonusBaseHp   + wHp+hHp+aHp+nHp+rHp+bHp + (hpSet * hpSetBonus + torrentSet * hpSetBonus/-2)) * bonusMaxHp);
@@ -642,38 +645,38 @@ public class GpuOptimizerKernel extends Kernel {
 
             final int bs = (int) (bsHp + bsAtk + bsDef + bsCr*1.6f + bsCd*1.14f + bsEff + bsRes + bsSpd*2);
 
-            final boolean f1 = atk < inputAtkMinLimit || atk > inputAtkMaxLimit
-                    ||  hp  < inputHpMinLimit  || hp > inputHpMaxLimit
-                    ||  def < inputDefMinLimit || def > inputDefMaxLimit
-                    ||  spd < inputSpdMinLimit || spd > inputSpdMaxLimit
-                    ||  cr < inputCrMinLimit   || cr > inputCrMaxLimit
-                    ||  cd < inputCdMinLimit   || cd > inputCdMaxLimit
-                    ||  eff < inputEffMinLimit || eff > inputEffMaxLimit
-                    ||  res < inputResMinLimit || res > inputResMaxLimit
-                    ||  cp < inputMinCpLimit || cp > inputMaxCpLimit;
-            final boolean f2 = hpps < inputMinHppsLimit || hpps > inputMaxHppsLimit
-                    ||  ehp < inputMinEhpLimit || ehp > inputMaxEhpLimit
-                    ||  ehpps < inputMinEhppsLimit || ehpps > inputMaxEhppsLimit
-                    ||  dmg < inputMinDmgLimit || dmg > inputMaxDmgLimit
-                    ||  dmgps < inputMinDmgpsLimit || dmgps > inputMaxDmgpsLimit
-                    ||  mcdmg < inputMinMcdmgLimit || mcdmg > inputMaxMcdmgLimit
-                    ||  mcdmgps < inputMinMcdmgpsLimit || mcdmgps > inputMaxMcdmgpsLimit
-                    ||  dmgh < inputMinDmgHLimit || dmgh > inputMaxDmgHLimit
-                    ||  dmgd < inputMinDmgDLimit || dmgd > inputMaxDmgDLimit
-                    ||  score < inputMinScoreLimit || score > inputMaxScoreLimit;
-            final boolean f3 = priority < inputMinPriorityLimit || priority > inputMaxPriorityLimit
-                    ||  upgrades < inputMinUpgradesLimit || upgrades > inputMaxUpgradesLimit
-                    ||  conversions < inputMinConversionsLimit || conversions > inputMaxConversionsLimit
-                    ||  eq < inputMinEquippedLimit || eq > inputMaxEquippedLimit
-                    ||  s1 < inputMinS1Limit || s1 > inputMaxS1Limit
-                    ||  s2 < inputMinS2Limit || s2 > inputMaxS2Limit
-                    ||  s3 < inputMinS3Limit || s3 > inputMaxS3Limit
-                    ||  bs < inputMinBSLimit || bs > inputMaxBSLimit;
+            final boolean f1 = atk < this.inputAtkMinLimit || atk > this.inputAtkMaxLimit
+                    ||  hp  < this.inputHpMinLimit  || hp > this.inputHpMaxLimit
+                    ||  def < this.inputDefMinLimit || def > this.inputDefMaxLimit
+                    ||  spd < this.inputSpdMinLimit || spd > this.inputSpdMaxLimit
+                    ||  cr < this.inputCrMinLimit   || cr > this.inputCrMaxLimit
+                    ||  cd < this.inputCdMinLimit   || cd > this.inputCdMaxLimit
+                    ||  eff < this.inputEffMinLimit || eff > this.inputEffMaxLimit
+                    ||  res < this.inputResMinLimit || res > this.inputResMaxLimit
+                    ||  cp < this.inputMinCpLimit || cp > this.inputMaxCpLimit;
+            final boolean f2 = hpps < this.inputMinHppsLimit || hpps > this.inputMaxHppsLimit
+                    ||  ehp < this.inputMinEhpLimit || ehp > this.inputMaxEhpLimit
+                    ||  ehpps < this.inputMinEhppsLimit || ehpps > this.inputMaxEhppsLimit
+                    ||  dmg < this.inputMinDmgLimit || dmg > this.inputMaxDmgLimit
+                    ||  dmgps < this.inputMinDmgpsLimit || dmgps > this.inputMaxDmgpsLimit
+                    ||  mcdmg < this.inputMinMcdmgLimit || mcdmg > this.inputMaxMcdmgLimit
+                    ||  mcdmgps < this.inputMinMcdmgpsLimit || mcdmgps > this.inputMaxMcdmgpsLimit
+                    ||  dmgh < this.inputMinDmgHLimit || dmgh > this.inputMaxDmgHLimit
+                    ||  dmgd < this.inputMinDmgDLimit || dmgd > this.inputMaxDmgDLimit
+                    ||  score < this.inputMinScoreLimit || score > this.inputMaxScoreLimit;
+            final boolean f3 = priority < this.inputMinPriorityLimit || priority > this.inputMaxPriorityLimit
+                    ||  upgrades < this.inputMinUpgradesLimit || upgrades > this.inputMaxUpgradesLimit
+                    ||  conversions < this.inputMinConversionsLimit || conversions > this.inputMaxConversionsLimit
+                    ||  eq < this.inputMinEquippedLimit || eq > this.inputMaxEquippedLimit
+                    ||  s1 < this.inputMinS1Limit || s1 > this.inputMaxS1Limit
+                    ||  s2 < this.inputMinS2Limit || s2 > this.inputMaxS2Limit
+                    ||  s3 < this.inputMinS3Limit || s3 > this.inputMaxS3Limit
+                    ||  bs < this.inputMinBSLimit || bs > this.inputMaxBSLimit;
 
 //            if (true)
 //                return;
 
-            passes[id] = !(f1 || f2 || f3) && setPermutationIndicesPlusOne[setIndex] > 0;
+            this.passes[id] = !(f1 || f2 || f3) && this.setPermutationIndicesPlusOne[setIndex] > 0;
 //            passes[id] = setIndex >= 340122242;
         }
     }
@@ -689,22 +692,22 @@ public class GpuOptimizerKernel extends Kernel {
                               final float penSetOn) {
 //        final float effectiveDefense = targetDefense * targets[s] * penMultiplier
 //        final float realDefense = targetDefense * (penSetOn * 0.12f + 0);
-        final float realPenetration = (1 - penetration[s]) * (1 - penSetOn * 0.15f * targets[s]);
+        final float realPenetration = (1 - this.penetration[s]) * (1 - penSetOn * 0.15f * this.targets[s]);
         final float statScalings =
-                        selfHpScaling[s] *hp +
-                        selfAtkScaling[s]*atk +
-                        selfDefScaling[s]*def +
-                        selfSpdScaling[s]*spd;
-        final float hitTypeMultis = crit[s] * (critDamage+cdmgIncrease[s]) + hitMulti[s];
-        final float increasedValueMulti = 1 + increasedValue[s];
-        final float dmgUpMod = 1 + selfSpdScaling[s] * spd;
+                        this.selfHpScaling[s] *hp +
+                        this.selfAtkScaling[s]*atk +
+                        this.selfDefScaling[s]*def +
+                        this.selfSpdScaling[s]*spd;
+        final float hitTypeMultis = this.crit[s] * (critDamage+this.cdmgIncrease[s]) + this.hitMulti[s];
+        final float increasedValueMulti = 1 + this.increasedValue[s];
+        final float dmgUpMod = 1 + this.selfSpdScaling[s] * spd;
         final float extraDamage = (
-                        extraSelfHpScaling[s] *hp +
-                        extraSelfAtkScaling[s]*atk +
-                        extraSelfDefScaling[s]*def) * 1.871f * 1f/(targetDefense*0.3f/300f + 1f);
-        final float offensiveValue = (atk * rate[s] + statScalings) * 1.871f * pow[s] * increasedValueMulti * hitTypeMultis * dmgUpMod * pctDmgMultiplier;
-        final float supportValue = selfHpScaling[s] * hp * support[s] + selfAtkScaling[s] * atk * support[s] + selfDefScaling[s] * def * support[s];
-        final float defensiveValue = 1f/(targetDefense*max(0, realPenetration)/300f + 1f);
+                        this.extraSelfHpScaling[s] *hp +
+                        this.extraSelfAtkScaling[s]*atk +
+                        this.extraSelfDefScaling[s]*def) * 1.871f * 1f/(this.targetDefense*0.3f/300f + 1f);
+        final float offensiveValue = (atk * this.rate[s] + statScalings) * 1.871f * this.pow[s] * increasedValueMulti * hitTypeMultis * dmgUpMod * pctDmgMultiplier;
+        final float supportValue = this.selfHpScaling[s] * hp * this.support[s] + this.selfAtkScaling[s] * atk * this.support[s] + this.selfDefScaling[s] * def * this.support[s];
+        final float defensiveValue = 1f/(this.targetDefense*this.max(0, realPenetration)/300f + 1f);
         return (int)(offensiveValue * defensiveValue + supportValue + extraDamage);
     }
 }

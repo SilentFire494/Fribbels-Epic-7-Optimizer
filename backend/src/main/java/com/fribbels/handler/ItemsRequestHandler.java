@@ -1,5 +1,16 @@
 package com.fribbels.handler;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.fribbels.db.HeroDb;
 import com.fribbels.db.ItemDb;
 import com.fribbels.enums.HeroFilter;
@@ -16,18 +27,8 @@ import com.fribbels.response.GetAllItemsResponse;
 import com.fribbels.response.GetItemByIdResponse;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import lombok.AllArgsConstructor;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
@@ -46,51 +47,51 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
         try {
             switch (path) {
                 case "/items/addItems":
-                    final ItemsRequest addItemsRequest = parseRequest(exchange, ItemsRequest.class);
-                    sendResponse(exchange, addItems(addItemsRequest));
+                    final ItemsRequest addItemsRequest = this.parseRequest(exchange, ItemsRequest.class);
+                    this.sendResponse(exchange, this.addItems(addItemsRequest));
                     return;
                 case "/items/mergeItems":
-                    final MergeRequest mergeItemsRequest = parseRequest(exchange, MergeRequest.class);
-                    sendResponse(exchange, mergeItems(mergeItemsRequest));
+                    final MergeRequest mergeItemsRequest = this.parseRequest(exchange, MergeRequest.class);
+                    this.sendResponse(exchange, this.mergeItems(mergeItemsRequest));
                     return;
                 case "/items/mergeHeroes":
-                    final MergeRequest mergeHeroesRequest = parseRequest(exchange, MergeRequest.class);
-                    sendResponse(exchange, mergeHeroes(mergeHeroesRequest));
+                    final MergeRequest mergeHeroesRequest = this.parseRequest(exchange, MergeRequest.class);
+                    this.sendResponse(exchange, this.mergeHeroes(mergeHeroesRequest));
                     return;
                 case "/items/setItems":
-                    final ItemsRequest setItemsRequest = parseRequest(exchange, ItemsRequest.class);
-                    sendResponse(exchange, setItems(setItemsRequest));
+                    final ItemsRequest setItemsRequest = this.parseRequest(exchange, ItemsRequest.class);
+                    this.sendResponse(exchange, this.setItems(setItemsRequest));
                     return;
                 case "/items/getAllItems":
-                    sendResponse(exchange, getAllItems());
+                    this.sendResponse(exchange, this.getAllItems());
                     return;
                 case "/items/getItemById":
-                    final IdRequest getItemByIdRequest = parseRequest(exchange, IdRequest.class);
-                    sendResponse(exchange, getItemById(getItemByIdRequest));
+                    final IdRequest getItemByIdRequest = this.parseRequest(exchange, IdRequest.class);
+                    this.sendResponse(exchange, this.getItemById(getItemByIdRequest));
                     return;
                 case "/items/getItemsByIds":
-                    final IdsRequest getItemsByIdsRequest = parseRequest(exchange, IdsRequest.class);
-                    sendResponse(exchange, getItemsByIds(getItemsByIdsRequest));
+                    final IdsRequest getItemsByIdsRequest = this.parseRequest(exchange, IdsRequest.class);
+                    this.sendResponse(exchange, this.getItemsByIds(getItemsByIdsRequest));
                     return;
                 case "/items/getItemByIngameId":
-                    final IdRequest getItemByIngameIdRequest = parseRequest(exchange, IdRequest.class);
-                    sendResponse(exchange, getItemByIngameId(getItemByIngameIdRequest));
+                    final IdRequest getItemByIngameIdRequest = this.parseRequest(exchange, IdRequest.class);
+                    this.sendResponse(exchange, this.getItemByIngameId(getItemByIngameIdRequest));
                     return;
                 case "/items/lockItems":
-                    final IdsRequest lockItemsRequest = parseRequest(exchange, IdsRequest.class);
-                    sendResponse(exchange, lockItems(lockItemsRequest));
+                    final IdsRequest lockItemsRequest = this.parseRequest(exchange, IdsRequest.class);
+                    this.sendResponse(exchange, this.lockItems(lockItemsRequest));
                     return;
                 case "/items/unlockItems":
-                    final IdsRequest unlockItemsRequest = parseRequest(exchange, IdsRequest.class);
-                    sendResponse(exchange, unlockItems(unlockItemsRequest));
+                    final IdsRequest unlockItemsRequest = this.parseRequest(exchange, IdsRequest.class);
+                    this.sendResponse(exchange, this.unlockItems(unlockItemsRequest));
                     return;
                 case "/items/deleteItems":
-                    final IdsRequest deleteItemsRequest = parseRequest(exchange, IdsRequest.class);
-                    sendResponse(exchange, deleteItems(deleteItemsRequest));
+                    final IdsRequest deleteItemsRequest = this.parseRequest(exchange, IdsRequest.class);
+                    this.sendResponse(exchange, this.deleteItems(deleteItemsRequest));
                     return;
                 case "/items/editItems":
-                    final ItemsRequest editItemsRequest = parseRequest(exchange, ItemsRequest.class);
-                    sendResponse(exchange, editItems(editItemsRequest));
+                    final ItemsRequest editItemsRequest = this.parseRequest(exchange, ItemsRequest.class);
+                    this.sendResponse(exchange, this.editItems(editItemsRequest));
                     return;
                 default:
                     System.out.println("No handler found for " + path);
@@ -99,17 +100,17 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
             e.printStackTrace();
         }
 
-        sendResponse(exchange, "ERROR");
+        this.sendResponse(exchange, "ERROR");
     }
 
     private String addItems(final ItemsRequest request) {
-        itemDb.addItems(request.getItems());
+        this.itemDb.addItems(request.getItems());
 
         return "";
     }
 
     private String mergeItems(final MergeRequest request) {
-        final List<Item> existingItems = itemDb.getAllItems();
+        final List<Item> existingItems = this.itemDb.getAllItems();
 
         // Filter new items with enhance >= enhanceLimit
         final List<Item> newItems = request.getItems().stream()
@@ -133,10 +134,10 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
                 final Item existingItem = itemsByIngameId.get(ingameId);
                 if (existingItem != null) {
                     // Replace existing item (update logic)
-                    itemDb.replaceItems(newItem);
+                    this.itemDb.replaceItems(newItem);
                 } else {
                     // Insert new item
-                    itemDb.addItems(Collections.singletonList(newItem));
+                    this.itemDb.addItem(newItem);
                 }
             }
         }
@@ -145,9 +146,9 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
     }
 
     private String mergeHeroes(final MergeRequest request) {
-        mergeItems(request);
+        this.mergeItems(request);
 
-        final List<Item> existingItems = itemDb.getAllItems();
+        final List<Item> existingItems = this.itemDb.getAllItems();
         final Map<String, List<Item>> itemsByIngameEquippedId = existingItems.stream()
                 .collect(Collectors.groupingBy(
                         Item::getIngameEquippedId,
@@ -161,7 +162,7 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
                         x -> x,
                         (x, y) -> x));
 
-        final List<Hero> existingHeroes = heroDb.getAllHeroes();
+        final List<Hero> existingHeroes = this.heroDb.getAllHeroes();
         final Map<String, Hero> existingHeroesByName = existingHeroes
                 .stream()
                 .collect(Collectors.toMap(
@@ -183,7 +184,7 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
                         final List<Item> itemsEquippedByIngameHeroId = itemsByIngameEquippedId
                                 .getOrDefault(ingameHeroId, List.of());
 
-                        heroesRequestHandler.equipItemsOnHero(EquipItemsOnHeroRequest.builder()
+                        this.heroesRequestHandler.equipItemsOnHero(EquipItemsOnHeroRequest.builder()
                                 .heroId(hero.getId())
                                 .itemIds(itemsEquippedByIngameHeroId
                                         .stream()
@@ -210,12 +211,12 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
                             hero = existingHeroesByName.get(name);
                             System.out.println("EXISTING HERO");
                         } else {
-                            heroesRequestHandler.addHeroes(HeroesRequest
+                            this.heroesRequestHandler.addHeroes(HeroesRequest
                                     .builder()
                                     .heroes(List.of(mergeHero.getData()))
                                     .build());
 
-                            hero = heroDb.getHeroById(mergeHero.getData().getId());
+                            hero = this.heroDb.getHeroById(mergeHero.getData().getId());
                             System.out.println("ADDED HERO" + hero);
                         }
 
@@ -223,7 +224,7 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
                         final List<Item> itemsEquippedByIngameHeroId = itemsByIngameEquippedId
                                 .getOrDefault(ingameHeroId, List.of());
 
-                        heroesRequestHandler.equipItemsOnHero(EquipItemsOnHeroRequest.builder()
+                        this.heroesRequestHandler.equipItemsOnHero(EquipItemsOnHeroRequest.builder()
                                 .heroId(hero.getId())
                                 .itemIds(itemsEquippedByIngameHeroId
                                         .stream()
@@ -250,12 +251,12 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
                             hero = existingHeroesByName.get(name);
                             System.out.println("EXISTING HERO");
                         } else {
-                            heroesRequestHandler.addHeroes(HeroesRequest
+                            this.heroesRequestHandler.addHeroes(HeroesRequest
                                     .builder()
                                     .heroes(List.of(mergeHero.getData()))
                                     .build());
 
-                            hero = heroDb.getHeroById(mergeHero.getData().getId());
+                            hero = this.heroDb.getHeroById(mergeHero.getData().getId());
                             System.out.println("ADDED HERO" + hero);
                         }
 
@@ -263,7 +264,7 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
                         final List<Item> itemsEquippedByIngameHeroId = itemsByIngameEquippedId
                                 .getOrDefault(ingameHeroId, List.of());
 
-                        heroesRequestHandler.equipItemsOnHero(EquipItemsOnHeroRequest.builder()
+                        this.heroesRequestHandler.equipItemsOnHero(EquipItemsOnHeroRequest.builder()
                                 .heroId(hero.getId())
                                 .itemIds(itemsEquippedByIngameHeroId
                                         .stream()
@@ -278,7 +279,7 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
     }
 
     private String setItems(final ItemsRequest request) {
-        itemDb.setItems(request.getItems());
+        this.itemDb.setItems(request.getItems());
 
         return "";
     }
@@ -286,7 +287,7 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
     private String editItems(final ItemsRequest request) {
         final List<Item> items = request.getItems();
         for (final Item item : items) {
-            final Item dbItem = itemDb.getItemById(item.getId());
+            final Item dbItem = this.itemDb.getItemById(item.getId());
             if (dbItem == null) {
                 System.out.println("No dbitem matching:" + item.getId());
                 continue;
@@ -312,7 +313,7 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
             dbItem.setConvertable(item.getConvertable());
             dbItem.setMaterial(item.getMaterial());
             dbItem.setAllowedMods(item.getAllowedMods());
-            itemDb.calculateWss(dbItem);
+            this.itemDb.calculateWss(dbItem);
             System.out.println("EDITED ITEM");
         }
 
@@ -321,7 +322,7 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
 
     private String lockItems(final IdsRequest request) {
         System.out.println(request);
-        final List<Item> items = itemDb.getItemsById(request.getIds());
+        final List<Item> items = this.itemDb.getItemsById(request.getIds());
         for (final Item item : items) {
             item.setLocked(true);
         }
@@ -331,7 +332,7 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
 
     private String unlockItems(final IdsRequest request) {
         System.out.println(request);
-        final List<Item> items = itemDb.getItemsById(request.getIds());
+        final List<Item> items = this.itemDb.getItemsById(request.getIds());
         for (final Item item : items) {
             item.setLocked(false);
         }
@@ -341,42 +342,42 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
 
     private String deleteItems(final IdsRequest request) {
         System.out.println(request.getIds());
-        final List<Item> items = itemDb.getItemsById(request.getIds());
+        final List<Item> items = this.itemDb.getItemsById(request.getIds());
 
         for (final Item item : items) {
             if (item == null)
                 continue;
 
             System.out.println("Deleting: " + item);
-            itemDb.deleteItem(item.getId());
+            this.itemDb.deleteItem(item.getId());
         }
 
         return "";
     }
 
     private String getAllItems() {
-        final List<Item> items = itemDb.getAllItems();
-        augmentItemData(items);
+        final List<Item> items = this.itemDb.getAllItems();
+        this.augmentItemData(items);
         final GetAllItemsResponse response = GetAllItemsResponse.builder()
                 .items(items)
                 .build();
 
-        return toJson(response);
+        return this.toJson(response);
     }
 
     private String getItemById(final IdRequest request) {
-        final Item item = itemDb.getItemById(request.getId());
+        final Item item = this.itemDb.getItemById(request.getId());
         System.out.println(request);
         System.out.println(item);
         final GetItemByIdResponse response = GetItemByIdResponse.builder()
                 .item(item)
                 .build();
 
-        return toJson(response);
+        return this.toJson(response);
     }
 
     private String getItemByIngameId(final IdRequest request) {
-        final List<Item> items = itemDb.getAllItems();
+        final List<Item> items = this.itemDb.getAllItems();
         final Optional<Item> match = items.stream()
                 .filter(x -> x.getIngameId().equals(request.getId()))
                 .findFirst();
@@ -388,7 +389,7 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
                 .item(match.orElse(null))
                 .build();
 
-        return toJson(response);
+        return this.toJson(response);
     }
 
     private String getItemsByIds(final IdsRequest request) {
@@ -398,14 +399,14 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
 
         final List<Item> items = request.getIds()
                 .stream()
-                .map(itemDb::getItemById)
+                .map(this.itemDb::getItemById)
                 .toList();
 
         final GetAllItemsResponse response = GetAllItemsResponse.builder()
                 .items(items)
                 .build();
 
-        return toJson(response);
+        return this.toJson(response);
     }
 
     private void augmentItemData(final List<Item> items) {

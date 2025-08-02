@@ -1999,6 +1999,16 @@
         },
         "code": "ef421"
     },
+    "Thorn of the Blue Rose": {
+        "name": "Thorn of the Blue Rose",
+        "rarity": 5,
+        "role": "warrior",
+        "stats": {
+            "attack": 9,
+            "defense": 11
+        },
+        "code": "efw37"
+    },
     "Time Matter": {
         "name": "Time Matter",
         "rarity": 5,
@@ -2348,6 +2358,16 @@
             "health": 76
         },
         "code": "efh21"
+    },
+    "Summer Photogenic": {
+        "name": "Summer Photogenic",
+        "rarity": 5,
+        "role": "assassin",
+        "stats": {
+            "attack": 21,
+            "defense": 5
+        },
+        "code": "efa28"
     },
     "Renewed Will": {
         "name": "Renewed Will",

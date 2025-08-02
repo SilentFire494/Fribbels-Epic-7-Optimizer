@@ -1,22 +1,22 @@
 package com.fribbels.model;
 
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+
 import com.fribbels.enums.Gear;
 import com.fribbels.enums.StatType;
 import com.fribbels.request.BonusStatsRequest;
 import com.fribbels.request.ModStatsRequest;
 import com.fribbels.request.OptimizationRequest;
 import com.fribbels.request.SkillOptionsRequest;
-import lombok.AllArgsConstructor;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.With;
-
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -33,7 +33,6 @@ public class Hero {
     private int cd;
     private int eff;
     private int res;
-    private int dac;
     private int spd;
 
     private int ehp;
@@ -127,11 +126,11 @@ public class Hero {
     private HeroSkills skills;
 
     public DamageMultipliers getDamageMultipliers() {
-        if (damageMultipliers != null) {
-            return damageMultipliers;
+        if (this.damageMultipliers != null) {
+            return this.damageMultipliers;
         }
-        if (skills == null || skills.S1[0].name == null) {
-            skills = HeroSkills.builder()
+        if (this.skills == null || this.skills.S1[0].name == null) {
+            this.skills = HeroSkills.builder()
                     .S1(new SkillData[] { SkillData.builder().build(), SkillData.builder().build(),
                             SkillData.builder().build() })
                     .S2(new SkillData[] { SkillData.builder().build(), SkillData.builder().build(),
@@ -140,48 +139,48 @@ public class Hero {
                             SkillData.builder().build() })
                     .build();
         }
-        if (skillOptions == null) {
+        if (this.skillOptions == null) {
             return DamageMultipliers.builder()
-                    .rate(new Float[] { skills.S1[0].rate, skills.S2[0].rate, skills.S3[0].rate })
-                    .pow(new Float[] { skills.S1[0].pow, skills.S2[0].pow, skills.S3[0].pow })
-                    .targets(new Integer[] { skills.S1[0].targets, skills.S2[0].targets, skills.S3[0].targets })
-                    .selfHpScaling(new Float[] { skills.S1[0].selfHpScaling, skills.S2[0].selfHpScaling,
-                            skills.S3[0].selfHpScaling })
-                    .selfAtkScaling(new Float[] { skills.S1[0].selfAtkScaling, skills.S2[0].selfAtkScaling,
-                            skills.S3[0].selfAtkScaling })
-                    .selfDefScaling(new Float[] { skills.S1[0].selfDefScaling, skills.S2[0].selfDefScaling,
-                            skills.S3[0].selfDefScaling })
-                    .selfSpdScaling(new Float[] { skills.S1[0].selfSpdScaling, skills.S2[0].selfSpdScaling,
-                            skills.S3[0].selfSpdScaling })
-                    .increasedValue(new Float[] { skills.S1[0].increasedValue, skills.S2[0].increasedValue,
-                            skills.S3[0].increasedValue })
-                    .extraSelfHpScaling(new Float[] { skills.S1[0].extraSelfHpScaling, skills.S2[0].extraSelfHpScaling,
-                            skills.S3[0].extraSelfHpScaling })
-                    .extraSelfDefScaling(new Float[] { skills.S1[0].extraSelfDefScaling,
-                            skills.S2[0].extraSelfDefScaling, skills.S3[0].extraSelfDefScaling })
-                    .extraSelfAtkScaling(new Float[] { skills.S1[0].extraSelfAtkScaling,
-                            skills.S2[0].extraSelfAtkScaling, skills.S3[0].extraSelfAtkScaling })
-                    .cdmgIncrease(new Float[] { skills.S1[0].cdmgIncrease, skills.S2[0].cdmgIncrease,
-                            skills.S3[0].cdmgIncrease })
-                    .penetration(new Float[] { skills.S1[0].penetration, skills.S2[0].penetration,
-                            skills.S3[0].penetration })
-                    .hitMulti(new Float[] { calculateHitMulti(skills.S1[0].name),
-                            calculateHitMulti(skills.S2[0].name), calculateHitMulti(skills.S3[0].name) })
-                    .support(new Float[] { calculateSupport(skills.S1[0].name),
-                            calculateSupport(skills.S2[0].name), calculateSupport(skills.S3[0].name) })
-                    .crit(new Float[] { calculateCrit(skills.S1[0].name), calculateCrit(skills.S2[0].name),
-                            calculateCrit(skills.S3[0].name) })
+                    .rate(new Float[] { this.skills.S1[0].rate, this.skills.S2[0].rate, this.skills.S3[0].rate })
+                    .pow(new Float[] { this.skills.S1[0].pow, this.skills.S2[0].pow, this.skills.S3[0].pow })
+                    .targets(new Integer[] { this.skills.S1[0].targets, this.skills.S2[0].targets, this.skills.S3[0].targets })
+                    .selfHpScaling(new Float[] { this.skills.S1[0].selfHpScaling, this.skills.S2[0].selfHpScaling,
+                            this.skills.S3[0].selfHpScaling })
+                    .selfAtkScaling(new Float[] { this.skills.S1[0].selfAtkScaling, this.skills.S2[0].selfAtkScaling,
+                            this.skills.S3[0].selfAtkScaling })
+                    .selfDefScaling(new Float[] { this.skills.S1[0].selfDefScaling, this.skills.S2[0].selfDefScaling,
+                            this.skills.S3[0].selfDefScaling })
+                    .selfSpdScaling(new Float[] { this.skills.S1[0].selfSpdScaling, this.skills.S2[0].selfSpdScaling,
+                            this.skills.S3[0].selfSpdScaling })
+                    .increasedValue(new Float[] { this.skills.S1[0].increasedValue, this.skills.S2[0].increasedValue,
+                            this.skills.S3[0].increasedValue })
+                    .extraSelfHpScaling(new Float[] { this.skills.S1[0].extraSelfHpScaling, this.skills.S2[0].extraSelfHpScaling,
+                            this.skills.S3[0].extraSelfHpScaling })
+                    .extraSelfDefScaling(new Float[] { this.skills.S1[0].extraSelfDefScaling,
+                            this.skills.S2[0].extraSelfDefScaling, this.skills.S3[0].extraSelfDefScaling })
+                    .extraSelfAtkScaling(new Float[] { this.skills.S1[0].extraSelfAtkScaling,
+                            this.skills.S2[0].extraSelfAtkScaling, this.skills.S3[0].extraSelfAtkScaling })
+                    .cdmgIncrease(new Float[] { this.skills.S1[0].cdmgIncrease, this.skills.S2[0].cdmgIncrease,
+                            this.skills.S3[0].cdmgIncrease })
+                    .penetration(new Float[] { this.skills.S1[0].penetration, this.skills.S2[0].penetration,
+                            this.skills.S3[0].penetration })
+                    .hitMulti(new Float[] { this.calculateHitMulti(this.skills.S1[0].name),
+                            this.calculateHitMulti(this.skills.S2[0].name), this.calculateHitMulti(this.skills.S3[0].name) })
+                    .support(new Float[] { this.calculateSupport(this.skills.S1[0].name),
+                            this.calculateSupport(this.skills.S2[0].name), this.calculateSupport(this.skills.S3[0].name) })
+                    .crit(new Float[] { this.calculateCrit(this.skills.S1[0].name), this.calculateCrit(this.skills.S2[0].name),
+                            this.calculateCrit(this.skills.S3[0].name) })
                     .build();
         } else {
-            final SkillData s1 = Arrays.stream(skills.S1)
-                    .filter(x -> x.name.equals(skillOptions.getS1().skillEffect)).findFirst()
-                    .orElse(skills.S1[0]);
-            final SkillData s2 = Arrays.stream(skills.S2)
-                    .filter(x -> x.name.equals(skillOptions.getS2().skillEffect)).findFirst()
-                    .orElse(skills.S2[0]);
-            final SkillData s3 = Arrays.stream(skills.S3)
-                    .filter(x -> x.name.equals(skillOptions.getS3().skillEffect)).findFirst()
-                    .orElse(skills.S3[0]);
+            final SkillData s1 = Arrays.stream(this.skills.S1)
+                    .filter(x -> x.name.equals(this.skillOptions.getS1().skillEffect)).findFirst()
+                    .orElse(this.skills.S1[0]);
+            final SkillData s2 = Arrays.stream(this.skills.S2)
+                    .filter(x -> x.name.equals(this.skillOptions.getS2().skillEffect)).findFirst()
+                    .orElse(this.skills.S2[0]);
+            final SkillData s3 = Arrays.stream(this.skills.S3)
+                    .filter(x -> x.name.equals(this.skillOptions.getS3().skillEffect)).findFirst()
+                    .orElse(this.skills.S3[0]);
             return DamageMultipliers.builder()
                     .rate(new Float[] { s1.rate, s2.rate, s3.rate })
                     .pow(new Float[] { s1.pow, s2.pow, s3.pow })
@@ -199,30 +198,30 @@ public class Hero {
                             new Float[] { s1.extraSelfAtkScaling, s2.extraSelfAtkScaling, s3.extraSelfAtkScaling })
                     .cdmgIncrease(new Float[] { s1.cdmgIncrease, s2.cdmgIncrease, s3.cdmgIncrease })
                     .penetration(new Float[] { s1.penetration, s2.penetration, s3.penetration })
-                    .hitMulti(new Float[] { calculateHitMulti(getSkillOptionsByIndex(0).skillEffect),
-                            calculateHitMulti(getSkillOptionsByIndex(1).skillEffect),
-                            calculateHitMulti(getSkillOptionsByIndex(2).skillEffect) })
-                    .support(new Float[] { calculateSupport(getSkillOptionsByIndex(0).skillEffect),
-                            calculateSupport(getSkillOptionsByIndex(1).skillEffect),
-                            calculateSupport(getSkillOptionsByIndex(2).skillEffect) })
-                    .crit(new Float[] { calculateCrit(getSkillOptionsByIndex(0).skillEffect),
-                            calculateCrit(getSkillOptionsByIndex(1).skillEffect),
-                            calculateCrit(getSkillOptionsByIndex(2).skillEffect) })
+                    .hitMulti(new Float[] { this.calculateHitMulti(this.getSkillOptionsByIndex(0).skillEffect),
+                            this.calculateHitMulti(this.getSkillOptionsByIndex(1).skillEffect),
+                            this.calculateHitMulti(this.getSkillOptionsByIndex(2).skillEffect) })
+                    .support(new Float[] { this.calculateSupport(this.getSkillOptionsByIndex(0).skillEffect),
+                            this.calculateSupport(this.getSkillOptionsByIndex(1).skillEffect),
+                            this.calculateSupport(this.getSkillOptionsByIndex(2).skillEffect) })
+                    .crit(new Float[] { this.calculateCrit(this.getSkillOptionsByIndex(0).skillEffect),
+                            this.calculateCrit(this.getSkillOptionsByIndex(1).skillEffect),
+                            this.calculateCrit(this.getSkillOptionsByIndex(2).skillEffect) })
                     .build();
         }
     }
 
     private SingleSkillOptions getSkillOptionsByIndex(final int skill) {
         if (skill == 0)
-            return skillOptions.S1;
+            return this.skillOptions.S1;
         if (skill == 1)
-            return skillOptions.S2;
-        return skillOptions.S3;
+            return this.skillOptions.S2;
+        return this.skillOptions.S3;
     }
 
     private float calculateSupport(final String name) {
         if (name.contains("heal") ||
-                name.equals("barrier")) {
+                "barrier".equals(name)) {
             return 1f;
         }
         return 0f;
@@ -253,7 +252,7 @@ public class Hero {
 
     public Item switchItem(final Item item) {
         final Gear gear = item.getGear();
-        final Item previousItem = addToEquipment(gear, item);
+        final Item previousItem = this.addToEquipment(gear, item);
 
         if (previousItem != null) {
             return previousItem;
@@ -263,11 +262,11 @@ public class Hero {
     }
 
     private Item addToEquipment(final Gear gear, final Item item) {
-        if (equipment == null) {
-            equipment = new EnumMap<>(Gear.class);
+        if (this.equipment == null) {
+            this.equipment = new EnumMap<>(Gear.class);
         }
 
-        return equipment.put(gear, item);
+        return this.equipment.put(gear, item);
     }
 
     public void setModStats(final ModStatsRequest modStatsRequest) {
@@ -312,9 +311,9 @@ public class Hero {
         this.artifactAttack = bonusStats.getArtifactAttack();
         this.artifactHealth = bonusStats.getArtifactHealth();
         this.artifactDefense = bonusStats.getArtifactDefense();
-
         this.artifactName = bonusStats.getArtifactName();
         this.artifactLevel = bonusStats.getArtifactLevel();
+        
         this.imprintNumber = bonusStats.getImprintNumber();
         this.eeNumber = bonusStats.getEeNumber();
 
@@ -326,11 +325,11 @@ public class Hero {
     }
 
     public Map<Gear, Item> getEquipment() {
-        if (equipment == null) {
-            equipment = new EnumMap<>(Gear.class);
+        if (this.equipment == null) {
+            this.equipment = new EnumMap<>(Gear.class);
         }
 
-        return equipment;
+        return this.equipment;
     }
 
     public void setStats(final HeroStats heroStats) {
@@ -341,7 +340,6 @@ public class Hero {
         this.cd = heroStats.getCd();
         this.eff = heroStats.getEff();
         this.res = heroStats.getRes();
-        this.dac = heroStats.getDac();
         this.spd = heroStats.getSpd();
 
         this.cp = heroStats.getCp();

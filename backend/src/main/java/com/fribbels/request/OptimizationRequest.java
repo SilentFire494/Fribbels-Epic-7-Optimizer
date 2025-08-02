@@ -1,22 +1,23 @@
 package com.fribbels.request;
 
+import java.util.List;
+
 import com.fribbels.enums.Set;
 import com.fribbels.enums.StatType;
 import com.fribbels.model.DamageMultipliers;
 import com.fribbels.model.Hero;
 import com.fribbels.model.Item;
 import com.fribbels.model.Request;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Wither;
+import lombok.With;
 
-import java.util.List;
-
-@Wither
+@With
 @Setter
 @Getter
 @Builder
@@ -61,10 +62,10 @@ public class OptimizationRequest extends Request {
     private int eff;
     private int res;
     private int spd;
-    private int dac;
 
     private float artifactAttack;
     private float artifactHealth;
+    private float artifactDefense;
 
     public int inputAtkMinLimit;
     public int inputAtkMaxLimit = Integer.MAX_VALUE;

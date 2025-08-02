@@ -1,6 +1,7 @@
 package com.fribbels.enums;
 
 import com.google.gson.annotations.SerializedName;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,8 +19,7 @@ public enum StatType {
     @SerializedName("CriticalHitDamagePercent") CRITDAMAGE (7),
     @SerializedName("EffectivenessPercent") EFFECTIVENESS (8),
     @SerializedName("EffectResistancePercent") EFFECTRESISTANCE (9),
-    @SerializedName("Speed") SPEED (10),
-    @SerializedName("Dac") DAC (11);
+    @SerializedName("Speed") SPEED (10);
 
-    private int index;
+    private final int index;
 }

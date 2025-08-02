@@ -1,46 +1,53 @@
 package com.fribbels.db;
 
-import com.fribbels.model.ArtifactStats;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class ArtifactStatsDb {
+import com.fribbels.model.ArtifactStats;
 
+public class ArtifactStatsDb {
     private Map<String, ArtifactStats> artifactStatsByName;
 
     public ArtifactStatsDb() {
-        artifactStatsByName = new HashMap<>();
+        this.artifactStatsByName = new HashMap<>();
     }
 
     public ArtifactStats getArtifactStats(final String name, final int level) {
-        final ArtifactStats base = artifactStatsByName.get(name);
+        final ArtifactStats base = this.artifactStatsByName.get(name);
         if (base == null) {
-            return ArtifactStats.builder()
-                                .attack(0f)
-                                .health(0f)
-                                // .defense(0f)
-                                .build();
+            return this.createDefaultStats();
         }
-    
-        final float maxAttack = base.getAttack() * 13;
-        final float maxHealth = base.getHealth() * 13;
-        // final float maxDefense = base.getDefense() * 13;
-    
-        final float leveledAttack = (maxAttack - base.getAttack()) * (level / 30f) + base.getAttack();
-        final float leveledHealth = (maxHealth - base.getHealth()) * (level / 30f) + base.getHealth();
-        // final float leveledDefense = (maxDefense - base.getDefense()) * (level / 30f) + base.getDefense();
-    
-        return ArtifactStats.builder()
-                            .attack(leveledAttack)
-                            .health(leveledHealth)
-                            // .defense(leveledDefense)
-                            .build();
+
+        return this.calculateLeveledStats(base, level);
     }
-    
 
     public void setArtifactStatsByName(final Map<String, ArtifactStats> artifactStatsByName) {
         this.artifactStatsByName = artifactStatsByName;
     }
-}
 
+    private ArtifactStats createDefaultStats() {
+        return ArtifactStats.builder()
+                .attack(0f)
+                .health(0f)
+                .defense(0f)
+                .build();
+    }
+
+    private ArtifactStats calculateLeveledStats(final ArtifactStats base, final int level) {
+        final float progress = level / 30f;
+        
+        return ArtifactStats.builder()
+                .attack(this.calculateLeveledValue(base.getAttack(), progress))
+                .health(this.calculateLeveledValue(base.getHealth(), progress))
+                .defense(this.calculateLeveledValue(base.getDefense(), progress))
+                .build();
+    }
+
+    private float calculateLeveledValue(final float baseValue, final float progress) {
+        if (baseValue == 0f) {
+            return 0f;
+        }
+        final float maxValue = baseValue * 13;
+        return (maxValue - baseValue) * progress + baseValue;
+    }
+}

@@ -1,16 +1,16 @@
 package com.fribbels.model;
 
+import java.security.MessageDigest;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.security.MessageDigest;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -27,7 +27,6 @@ public class HeroStats {
     private int cd;
     private int eff;
     private int res;
-    private int dac;
     private int spd;
     private int cp;
 
@@ -64,13 +63,13 @@ public class HeroStats {
     private List<Mod> mods;
 
     public String getBuildHash() {
-        if (items == null || items.size() != 6) {
+        if (this.items == null || this.items.size() != 6) {
             return null;
         }
 
         try {
             final MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            final String combinedItems = String.join("", items) + (mods == null ? "" : mods.stream()
+            final String combinedItems = String.join("", this.items) + (this.mods == null ? "" : this.mods.stream()
                                                                       .filter(Objects::nonNull)
                                                                       .map(Mod::toString)
                                                                       .collect(Collectors.joining("")));

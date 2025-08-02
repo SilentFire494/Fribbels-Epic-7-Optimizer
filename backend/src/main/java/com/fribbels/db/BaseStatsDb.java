@@ -1,41 +1,41 @@
 package com.fribbels.db;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fribbels.core.SpecialStats;
 import com.fribbels.model.BaseStats;
 import com.fribbels.model.HeroStats;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class BaseStatsDb {
 
     private Map<String, BaseStats> baseStatsByName;
 
     public BaseStatsDb() {
-        baseStatsByName = new HashMap<>();
+        this.baseStatsByName = new HashMap<>();
     }
 
     public BaseStats getBaseStatsByName(final String name) {
-        BaseStats baseStats = baseStatsByName.get(name);
+        final BaseStats baseStats = this.baseStatsByName.get(name);
         if (baseStats == null) {
             return null;
         }
 
         return BaseStats.builder()
-                .lv50FiveStarFullyAwakened(getBaseStatsByName(name, 5))
-                .lv60SixStarFullyAwakened(getBaseStatsByName(name, 6))
+                .lv50FiveStarFullyAwakened(this.getBaseStatsByName(name, 5))
+                .lv60SixStarFullyAwakened(this.getBaseStatsByName(name, 6))
                 .skills(baseStats.getSkills())
                 .build();
     }
 
     public HeroStats getBaseStatsByName(final String name, final int stars) {
-        BaseStats baseStats = baseStatsByName.get(name);
+        final BaseStats baseStats = this.baseStatsByName.get(name);
 
         if (baseStats == null) {
             return null;
         }
 
-        HeroStats heroStats = stars == 5
+        final HeroStats heroStats = stars == 5
                 ? baseStats.getLv50FiveStarFullyAwakened()
                 : baseStats.getLv60SixStarFullyAwakened();
 
@@ -43,7 +43,7 @@ public class BaseStatsDb {
             return null;
         }
 
-        HeroStats response = HeroStats.builder()
+        final HeroStats response = HeroStats.builder()
                 .atk(heroStats.getAtk())
                 .hp(heroStats.getHp())
                 .def(heroStats.getDef())
@@ -51,7 +51,6 @@ public class BaseStatsDb {
                 .cd(heroStats.getCd())
                 .eff(heroStats.getEff())
                 .res(heroStats.getRes())
-                .dac(heroStats.getDac())
                 .spd(heroStats.getSpd())
                 .bonusStats(heroStats.getBonusStats())
                 .name(name)

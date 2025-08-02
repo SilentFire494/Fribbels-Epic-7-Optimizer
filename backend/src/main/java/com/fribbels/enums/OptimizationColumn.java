@@ -1,6 +1,7 @@
 package com.fribbels.enums;
 
 import com.google.gson.annotations.SerializedName;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,7 +17,6 @@ public enum OptimizationColumn {
     @SerializedName("cd") CD,
     @SerializedName("eff") EFF,
     @SerializedName("res") RES,
-    @SerializedName("dac") DAC,
     @SerializedName("cp") CP,
     @SerializedName("hpps") HPPS,
     @SerializedName("ehp") EHP,
@@ -31,7 +31,6 @@ public enum OptimizationColumn {
     @SerializedName("s2") S2,
     @SerializedName("s3") S3,
     @SerializedName("upgrades") UPGRADES,
-    @SerializedName("conversions") CONVERSIONS,
     @SerializedName("eq") EQ,
     @SerializedName("score") SCORE,
     @SerializedName("bs") BS,

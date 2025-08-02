@@ -19,22 +19,18 @@ import com.sun.net.httpserver.HttpServer;
 
 public class Main {
 
-    private static final ExecutorService EXECUTOR_SERVICE = Executors.newVirtualThreadPerTaskExecutor();
+    private static final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 
-    public static final ArtifactStatsDb artifactStatsDb = new ArtifactStatsDb();
+    private static volatile boolean interrupt = false;
+    private static final ArtifactStatsDb artifactStatsDb = new ArtifactStatsDb();
     private static final BaseStatsDb baseStatsDb = new BaseStatsDb();
     private static final HeroDb heroDb = new HeroDb(baseStatsDb);
     private static final ItemDb itemDb = new ItemDb(heroDb);
-
-    private static volatile boolean interrupt = false;
     private static final String HOST = "localhost";
     private static final int PORT = 8130;
 
     public static void main(final String[] args) throws Exception {
         System.out.println("START");
-
-        // EXECUTOR_SERVICE = Executors.newCachedThreadPool(); Trying over Executors.newVirtualThreadPerTaskExecutor to allow for more efficient handling of requests
-
         start();
     }
 
@@ -65,12 +61,12 @@ public class Main {
         server.createContext("/heroes", heroesRequestHandler);
         server.createContext("/ocr", new OcrRequestHandler());
 
-        server.setExecutor(EXECUTOR_SERVICE);
+        server.setExecutor(executorService);
         server.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (EXECUTOR_SERVICE != null && !EXECUTOR_SERVICE.isShutdown()) {
-                EXECUTOR_SERVICE.shutdown();
+            if (executorService != null && !executorService.isShutdown()) {
+                executorService.shutdown();
             }
         }));
     }

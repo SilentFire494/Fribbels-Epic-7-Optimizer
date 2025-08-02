@@ -97,48 +97,48 @@ module.exports = {
 
     error: (text) => {
         Swal.fire({
-          icon: 'error',
-          text: i18next.t(text),
-          confirmButtonText: i18next.t("OK"),
-          allowOutsideClick: outsideClickDisable
-          // cancelButtonText: i18next.t("Cancel")
+            icon: 'error',
+            text: i18next.t(text),
+            confirmButtonText: i18next.t("OK"),
+            allowOutsideClick: outsideClickDisable
+            // cancelButtonText: i18next.t("Cancel")
         })
     },
 
     info: (text) => {
         Swal.fire({
-          icon: 'info',
-          text: i18next.t(text),
-          confirmButtonText: i18next.t("OK"),
-          // cancelButtonText: i18next.t("Cancel")
+            icon: 'info',
+            text: i18next.t(text),
+            confirmButtonText: i18next.t("OK"),
+            // cancelButtonText: i18next.t("Cancel")
         })
     },
 
     success: (text) => {
         Swal.fire({
-          icon: 'success',
-          text: i18next.t(text),
-          confirmButtonText: i18next.t("OK"),
-          // cancelButtonText: i18next.t("Cancel")
+            icon: 'success',
+            text: i18next.t(text),
+            confirmButtonText: i18next.t("OK"),
+            // cancelButtonText: i18next.t("Cancel")
         })
     },
 
     htmlSuccess: (html) => {
         Swal.fire({
-          icon: 'success',
-          html: html,
-          confirmButtonText: i18next.t("OK")
-          // cancelButtonText: i18next.t("Cancel")
+            icon: 'success',
+            html: html,
+            confirmButtonText: i18next.t("OK")
+            // cancelButtonText: i18next.t("Cancel")
         })
     },
 
     htmlSuccessDisableOutsideClick: (html) => {
         Swal.fire({
-          icon: 'success',
-          html: html,
-          confirmButtonText: i18next.t("OK"),
-          allowOutsideClick: outsideClickDisable
-          // cancelButtonText: i18next.t("Cancel")
+            icon: 'success',
+            html: html,
+            confirmButtonText: i18next.t("OK"),
+            allowOutsideClick: outsideClickDisable
+            // cancelButtonText: i18next.t("Cancel")
         })
     },
 
@@ -148,26 +148,26 @@ module.exports = {
             html: html,
             confirmButtonText: i18next.t("OK"),
             allowOutsideClick: outsideClickDisable
-          // cancelButtonText: i18next.t("Cancel")
+            // cancelButtonText: i18next.t("Cancel")
         })
     },
 
     updatePrompt: (text) => {
         return new Promise((resolve, reject) => {
             Swal.fire({
-              icon: 'success',
-              text: i18next.t(text),
-              showCancelButton: true,
-              confirmButtonText: i18next.t("Yes"),
-              cancelButtonText: i18next.t("Later"),
-              confirmButtonColor: '#51A259',
-              allowOutsideClick: outsideClickDisable
+                icon: 'success',
+                text: i18next.t(text),
+                showCancelButton: true,
+                confirmButtonText: i18next.t("Yes"),
+                cancelButtonText: i18next.t("Later"),
+                confirmButtonColor: '#51A259',
+                allowOutsideClick: outsideClickDisable
             }).then((result) => {
-              if (result.isConfirmed) {
-                resolve("restart");
-              } else if (result.isDenied) {
-                reject("skip");
-              }
+                if (result.isConfirmed) {
+                    resolve("restart");
+                } else if (result.isDenied) {
+                    reject("skip");
+                }
             })
         })
     },
@@ -175,19 +175,19 @@ module.exports = {
     erasePrompt: (text) => {
         return new Promise((resolve, reject) => {
             Swal.fire({
-              icon: 'info',
-              text: i18next.t(text),
-              showCancelButton: true,
-              confirmButtonText: i18next.t("Yes"),
-              cancelButtonText: i18next.t("No"),
-              confirmButtonColor: '#51A259',
-              allowOutsideClick: outsideClickDisable
+                icon: 'info',
+                text: i18next.t(text),
+                showCancelButton: true,
+                confirmButtonText: i18next.t("Yes"),
+                cancelButtonText: i18next.t("No"),
+                confirmButtonColor: '#51A259',
+                allowOutsideClick: outsideClickDisable
             }).then((result) => {
-              if (result.isConfirmed) {
-                resolve("yes");
-              } else if (result.isDenied) {
-                reject("no");
-              }
+                if (result.isConfirmed) {
+                    resolve("yes");
+                } else if (result.isDenied) {
+                    reject("no");
+                }
             })
         })
     },
@@ -217,18 +217,35 @@ module.exports = {
     changeArtifact: (level) => {
         const name = $('#editArtifact').val();
 
-        var html = ``;
-
-        if (name == "None") {
+        if (name === "None") {
             return;
         }
 
-        for (var i = 30; i >= 0; i--) {
-            var stats = Artifact.getStats(name, i)
-            html += `<option value="${i}" >${i} - (${stats.attack.toFixed(1)} ${i18next.t("atk")}, ${stats.health.toFixed(1)} ${i18next.t("hp")})</option>`
+        let html = '';
+        const i18nAtk = i18next.t("atk");
+        const i18nHp = i18next.t("hp");
+        const i18nDef = i18next.t("def");
+
+        for (let i = 30; i >= 0; i--) {
+            const stats = Artifact.getStats(name, i);
+
+            let statDisplay = [];
+            if (stats.attack !== undefined) {
+                statDisplay.push(`${stats.attack.toFixed(1)} ${i18nAtk}`);
+            }
+            if (stats.health !== undefined) {
+                statDisplay.push(`${stats.health.toFixed(1)} ${i18nHp}`);
+            }
+            if (stats.defense !== undefined) {
+                statDisplay.push(`${stats.defense.toFixed(1)} ${i18nDef}`);
+            }
+
+            html += `<option value="${i}">${i} - (${statDisplay.join(', ')})</option>`;
         }
 
-        $("select[id='editArtifactLevel']").find('option').remove().end().append(html);
+        // Update the select element
+        const $select = $("select[id='editArtifactLevel']");
+        $select.empty().append(html);
     },
 
 
@@ -327,19 +344,19 @@ module.exports = {
                     const contents = document.querySelectorAll(".tabsContent");
 
                     tabs.onclick = e => {
-                      const id = e.target.dataset.id;
-                      if (id) {
-                        tabButton.forEach(btn => {
-                          btn.classList.remove("active");
-                        });
-                        e.target.classList.add("active");
+                        const id = e.target.dataset.id;
+                        if (id) {
+                            tabButton.forEach(btn => {
+                                btn.classList.remove("active");
+                            });
+                            e.target.classList.add("active");
 
-                        contents.forEach(content => {
-                          content.classList.remove("active");
-                        });
-                        const element = document.getElementById(id);
-                        element.classList.add("active");
-                      }
+                            contents.forEach(content => {
+                                content.classList.remove("active");
+                            });
+                            const element = document.getElementById(id);
+                            element.classList.add("active");
+                        }
                     }
                 },
                 focusConfirm: false,
@@ -1074,13 +1091,13 @@ module.exports = {
                         selectAll: false,
                     };
 
-                    $('#inputSet1' + index).multipleSelect(Object.assign({}, groupSelectMultipleSelectOptions, {placeholder: i18next.t("4 or 2 piece sets")}));
-                    $('#inputSet2' + index).multipleSelect(Object.assign({}, groupSelectMultipleSelectOptions, {placeholder: i18next.t("2 piece sets")}));
-                    $('#inputSet3' + index).multipleSelect(Object.assign({}, groupSelectMultipleSelectOptions, {placeholder: i18next.t("2 piece sets")}));
-                    $('#inputNecklaceStat' + index).multipleSelect(Object.assign({}, selectAllMultipleSelectOptions, {placeholder: i18next.t("Necklace")},{formatSelectAll () {return i18next.t('[Select all]')}}));
-                    $('#inputRingStat' + index).multipleSelect(Object.assign({}, selectAllMultipleSelectOptions, {placeholder: i18next.t("Ring")},{formatSelectAll () {return i18next.t('[Select all]')}}));
-                    $('#inputBootsStat' + index).multipleSelect(Object.assign({}, selectAllMultipleSelectOptions, {placeholder: i18next.t("Boots")},{formatSelectAll () {return i18next.t('[Select all]')}}));
-                    $('#inputExcludeSet' + index).multipleSelect(Object.assign({}, groupSelectMultipleSelectOptions, {placeholder: i18next.t("Exclude sets")}));
+                    $('#inputSet1' + index).multipleSelect(Object.assign({}, groupSelectMultipleSelectOptions, { placeholder: i18next.t("4 or 2 piece sets") }));
+                    $('#inputSet2' + index).multipleSelect(Object.assign({}, groupSelectMultipleSelectOptions, { placeholder: i18next.t("2 piece sets") }));
+                    $('#inputSet3' + index).multipleSelect(Object.assign({}, groupSelectMultipleSelectOptions, { placeholder: i18next.t("2 piece sets") }));
+                    $('#inputNecklaceStat' + index).multipleSelect(Object.assign({}, selectAllMultipleSelectOptions, { placeholder: i18next.t("Necklace") }, { formatSelectAll() { return i18next.t('[Select all]') } }));
+                    $('#inputRingStat' + index).multipleSelect(Object.assign({}, selectAllMultipleSelectOptions, { placeholder: i18next.t("Ring") }, { formatSelectAll() { return i18next.t('[Select all]') } }));
+                    $('#inputBootsStat' + index).multipleSelect(Object.assign({}, selectAllMultipleSelectOptions, { placeholder: i18next.t("Boots") }, { formatSelectAll() { return i18next.t('[Select all]') } }));
+                    $('#inputExcludeSet' + index).multipleSelect(Object.assign({}, groupSelectMultipleSelectOptions, { placeholder: i18next.t("Exclude sets") }));
 
                     const getAllHeroesResponse = await Api.getAllHeroes();
                     const optimizerAllowGearFromSelector = document.getElementById('optionsExcludeGearFrom' + index)
@@ -1096,7 +1113,7 @@ module.exports = {
 
                         optimizerAllowGearFromSelector.add(option2);
                     }
-                    $('#optionsExcludeGearFrom' + index).multipleSelect(Object.assign({}, excludeEquippedSelectOptions, {placeholder: i18next.t("Exclude equipped"), selectAll: true},{formatSelectAll () {return i18next.t('[Select all]')}}));
+                    $('#optionsExcludeGearFrom' + index).multipleSelect(Object.assign({}, excludeEquippedSelectOptions, { placeholder: i18next.t("Exclude equipped"), selectAll: true }, { formatSelectAll() { return i18next.t('[Select all]') } }));
 
                     Selectors.refreshAllowGearFrom(index);
                     $('#optionsExcludeGearFrom' + index).change(() => {
@@ -1113,13 +1130,13 @@ module.exports = {
                         Settings.saveSettings();
                     })
 
-                    $('#optionsEnhanceLimit' + index).multipleSelect(Object.assign({}, enhanceOptions, {placeholder: i18next.t("Minimum enhance"), selectAll: false}));
+                    $('#optionsEnhanceLimit' + index).multipleSelect(Object.assign({}, enhanceOptions, { placeholder: i18next.t("Minimum enhance"), selectAll: false }));
                     const selects = $('#optionsEnhanceLimit').multipleSelect('getSelects');
                     console.warn("index", index, $('#optionsEnhanceLimit' + index))
                     $('#optionsEnhanceLimit' + index).multipleSelect('setSelects', selects)
                     $('#optionsEnhanceLimit' + index).multipleSelect('refresh')
 
-                    OptimizerTab.loadPreviousHeroFilters({hero: hero}, index, false, 'multiOptimizer');
+                    OptimizerTab.loadPreviousHeroFilters({ hero: hero }, index, false, 'multiOptimizer');
                 },
                 focusConfirm: false,
                 showCancelButton: true,
@@ -1290,56 +1307,56 @@ module.exports = {
 
                     tippy('#limitRollsLabel', {
                         placement: 'top',
-                        content: '<p>'+i18next.t("Choose the maximum number of rolls to replace. For example, limit rolls = 1 would only replace base stats that didn't get enhanced. It is generally not a good idea to replace more than 2 rolls, and the higher this number is, the more permutations will be generated.")+'</p>'
+                        content: '<p>' + i18next.t("Choose the maximum number of rolls to replace. For example, limit rolls = 1 would only replace base stats that didn't get enhanced. It is generally not a good idea to replace more than 2 rolls, and the higher this number is, the more permutations will be generated.") + '</p>'
                     })
                     tippy('#limitRolls', {
                         placement: 'top',
-                        content: '<p>'+i18next.t("Choose the maximum number of rolls to replace. For example, limit rolls = 1 would only replace base stats that didn't get enhanced. It is generally not a good idea to replace more than 2 rolls, and the higher this number is, the more permutations will be generated.")+'</p>'
+                        content: '<p>' + i18next.t("Choose the maximum number of rolls to replace. For example, limit rolls = 1 would only replace base stats that didn't get enhanced. It is generally not a good idea to replace more than 2 rolls, and the higher this number is, the more permutations will be generated.") + '</p>'
                     })
 
                     tippy('#modGradeLabel', {
                         placement: 'top',
-                        content: '<p>'+i18next.t("Choose whether to use Greater or Lesser gem stats.")+'</p>'
+                        content: '<p>' + i18next.t("Choose whether to use Greater or Lesser gem stats.") + '</p>'
                     })
                     tippy('#modGrade', {
                         placement: 'top',
-                        content: '<p>'+i18next.t("Choose whether to use Greater or Lesser gem stats.")+'</p>'
+                        content: '<p>' + i18next.t("Choose whether to use Greater or Lesser gem stats.") + '</p>'
                     })
 
                     tippy('#rollQualityLabel', {
                         placement: 'top',
-                        content: '<p>'+i18next.t("Choose the modified substat's roll value, from min roll to max roll. The actual value ingame will be random. Values will be rounded to the nearest whole number.")+'</p>'
+                        content: '<p>' + i18next.t("Choose the modified substat's roll value, from min roll to max roll. The actual value ingame will be random. Values will be rounded to the nearest whole number.") + '</p>'
                     })
                     tippy('#rollQuality', {
                         placement: 'top',
-                        content: '<p>'+i18next.t("Choose the modified substat's roll value, from min roll to max roll. The actual value ingame will be random. Values will be rounded to the nearest whole number.")+'</p>'
+                        content: '<p>' + i18next.t("Choose the modified substat's roll value, from min roll to max roll. The actual value ingame will be random. Values will be rounded to the nearest whole number.") + '</p>'
                     })
 
                     tippy('#keepStatsLabel', {
                         placement: 'top',
-                        content: '<p>'+i18next.t("Choose whether wanted stats should be allowed to be replaced with wanted stats when optimizing. For example, when allowed, a min speed roll could be replaced by a max speed roll. When not allowed, the speed will be left unmodified.")+'</p>'
+                        content: '<p>' + i18next.t("Choose whether wanted stats should be allowed to be replaced with wanted stats when optimizing. For example, when allowed, a min speed roll could be replaced by a max speed roll. When not allowed, the speed will be left unmodified.") + '</p>'
                     })
                     tippy('#keepStatOptions', {
                         placement: 'top',
-                        content: '<p>'+i18next.t("Choose whether wanted stats should be allowed to be replaced with wanted stats when optimizing. For example, when allowed, a min speed roll could be replaced by a max speed roll. When not allowed, the speed will be left unmodified.")+'</p>'
+                        content: '<p>' + i18next.t("Choose whether wanted stats should be allowed to be replaced with wanted stats when optimizing. For example, when allowed, a min speed roll could be replaced by a max speed roll. When not allowed, the speed will be left unmodified.") + '</p>'
                     })
 
                     tippy('#keepGroup', {
                         placement: 'top',
                         delay: [500, null],
-                        content: '<p>'+i18next.t("Choose the substats that you want to modify for. Substats in the unwanted column will be replaced by substats in wanted column.")+'</p>'
+                        content: '<p>' + i18next.t("Choose the substats that you want to modify for. Substats in the unwanted column will be replaced by substats in wanted column.") + '</p>'
                     })
 
                     tippy('#ignoreGroup', {
                         placement: 'top',
                         delay: [500, null],
-                        content: '<p>'+i18next.t("Choose the substats to not modify. Substats in this column will not get replaced, and will also not be selected for.")+'</p>'
+                        content: '<p>' + i18next.t("Choose the substats to not modify. Substats in this column will not get replaced, and will also not be selected for.") + '</p>'
                     })
 
                     tippy('#modifyGroup', {
                         placement: 'top',
                         delay: [500, null],
-                        content: '<p>'+i18next.t("Choose the substats that you want to discard when modifying. Substats in the unwanted column will be replaced by substats in wanted column.")+'</p>'
+                        content: '<p>' + i18next.t("Choose the substats that you want to discard when modifying. Substats in the unwanted column will be replaced by substats in wanted column.") + '</p>'
                     })
                 },
                 focusConfirm: false,
@@ -1580,7 +1597,7 @@ module.exports = {
                     const checkboxes = ["#subMod1", "#subMod2", "#subMod3", "#subMod4"]
 
                     for (var checkbox of checkboxes) {
-                        $(checkbox).change(function() {
+                        $(checkbox).change(function () {
                             for (var toUncheck of checkboxes) {
                                 console.log(this);
                                 if (!toUncheck.includes(this.id)) {
@@ -1612,7 +1629,7 @@ module.exports = {
                     }
 
                     if (!editedItem.rank || editedItem.rank == "None" ||
-                        !editedItem.set  || editedItem.set == "None"  ||
+                        !editedItem.set || editedItem.set == "None" ||
                         !editedItem.gear || editedItem.gear == "None" ||
                         !editedItem.main || !editedItem.main.type || editedItem.main.type == "None" || !editedItem.main.value) {
                         module.exports.error(i18next.t("Please make sure Type / Set / Rank / Level / Enhance / Main stat are not empty"));
@@ -1627,10 +1644,10 @@ module.exports = {
                     const subStatType3 = document.getElementById('editGearStat3Type').value;
                     const subStatType4 = document.getElementById('editGearStat4Type').value;
 
-                    if (subStatType1 !="None") substats.push({type: subStatType1, value: parseInt(document.getElementById('editGearStat1Value').value || 0), modified: $('#subMod1').prop('checked')})
-                    if (subStatType2 !="None") substats.push({type: subStatType2, value: parseInt(document.getElementById('editGearStat2Value').value || 0), modified: $('#subMod2').prop('checked')})
-                    if (subStatType3 !="None") substats.push({type: subStatType3, value: parseInt(document.getElementById('editGearStat3Value').value || 0), modified: $('#subMod3').prop('checked')})
-                    if (subStatType4 !="None") substats.push({type: subStatType4, value: parseInt(document.getElementById('editGearStat4Value').value || 0), modified: $('#subMod4').prop('checked')})
+                    if (subStatType1 != "None") substats.push({ type: subStatType1, value: parseInt(document.getElementById('editGearStat1Value').value || 0), modified: $('#subMod1').prop('checked') })
+                    if (subStatType2 != "None") substats.push({ type: subStatType2, value: parseInt(document.getElementById('editGearStat2Value').value || 0), modified: $('#subMod2').prop('checked') })
+                    if (subStatType3 != "None") substats.push({ type: subStatType3, value: parseInt(document.getElementById('editGearStat3Value').value || 0), modified: $('#subMod3').prop('checked') })
+                    if (subStatType4 != "None") substats.push({ type: subStatType4, value: parseInt(document.getElementById('editGearStat4Value').value || 0), modified: $('#subMod4').prop('checked') })
 
                     editedItem.substats = substats;
 
@@ -1639,7 +1656,7 @@ module.exports = {
                         console.error("FAIL", editedItem)
                         return false;
                     }
-                    if (editedItem.enhance < 0 ||  editedItem.enhance > 15) {
+                    if (editedItem.enhance < 0 || editedItem.enhance > 15) {
                         module.exports.error(i18next.t("Item enhance can only be 0 - 15"));
                         console.error("FAIL", editedItem)
                         return false;
@@ -1698,7 +1715,7 @@ function generateSkillOptionsHtml(prefix, hero, heroData) {
         skillTypesHtml += `<option value='${skillType.name}' ${safeGetSkill(hero, prefix).skillEffect == skillType.name ? "selected" : ""}>${skillType.name + note}</option>\n`
     }
     const html =
-`
+        `
 <div class="editGearFormRow">
         <div class="editGearFormRow">
             <div class="editSkillLabel" id="skillNumberLabel"  data-t>${i18next.t("Select Skill Effect")}</div>
@@ -1712,7 +1729,7 @@ function generateSkillOptionsHtml(prefix, hero, heroData) {
 }
 
 function generateSkillOptionsHtmlOLDWITHDAMAGECALC(prefix, hero, heroData) {
-    var skillTypes = !heroData.skills ? [] : heroData.skills[prefix] 
+    var skillTypes = !heroData.skills ? [] : heroData.skills[prefix]
     var skillTypesHtml = ""
     for (var skillType of skillTypes.options) {
         console.warn("---")
@@ -1722,7 +1739,7 @@ function generateSkillOptionsHtmlOLDWITHDAMAGECALC(prefix, hero, heroData) {
         skillTypesHtml += `<option value='${skillType.name}' ${safeGetSkill(hero, prefix).skillEffect == skillType.name ? "selected" : ""}>${skillType.name}</option>\n`
     }
     const html =
-`
+        `
 <div class="editGearFormRow">
     <div class="editGearFormHalf">
         <div class="editGearFormRow">
@@ -1863,15 +1880,15 @@ function getEeHtml(hero, ee) {
     const percentValue = Math.round(statValue * 100);
     const initialValue = hero.eeStat || 0
     // const labelText = ee ?  + " (" + percentValue + " - " + percentValue * 2 + ")": "None";
-    const labelText = ee ? `${e7StatToDisplayStat[statType]} (${percentValue} - ${percentValue*2})` : "None";
+    const labelText = ee ? `${e7StatToDisplayStat[statType]} (${percentValue} - ${percentValue * 2})` : "None";
 
     return `
         <div class="valuePadding input-holder">
             <input type="number" class="bonusStatInput" id="editHeroBonusEeStat" value="${initialValue}">
         </div>
     `
-        // <div class="smallBlankFormSpace"></div>
-        // <div class="editEeStatLabel">${labelText}</div>
+    // <div class="smallBlankFormSpace"></div>
+    // <div class="editEeStatLabel">${labelText}</div>
 }
 
 function getImprintHtml(hero, heroInfo) {
@@ -1899,8 +1916,8 @@ function getImprintHtml(hero, heroInfo) {
 
     html += `</select>
             `
-            // <div class="smallBlankFormSpace"></div>
-            // <div class="editEeStatLabel">${displayText}</div>
+    // <div class="smallBlankFormSpace"></div>
+    // <div class="editEeStatLabel">${displayText}</div>
     return html;
 }
 
@@ -1943,17 +1960,34 @@ function getArtifactHtml(hero) {
 
 
 function getArtifactEnhanceHtml(hero) {
-    var html = `<option value="None">${i18next.t("None")}</option>`;
+    let html = `<option value="None">${i18next.t("None")}</option>`;
 
-    const artifactName = hero.artifactName
-    if (artifactName && artifactName !="None") {
+    const artifactName = hero.artifactName;
+    if (artifactName && artifactName !== "None") {
         const artifactLevel = hero.artifactLevel;
-        if (artifactLevel && artifactLevel !="None") {
-            for (var i = 30; i >= 0; i--) {
-                var stats = Artifact.getStats(artifactName, i)
-                html += `<option value="${i}" ${artifactLevel == i ? "selected" : ""}>${i} - (${stats.attack.toFixed(1)} ${i18next.t("atk")}, ${stats.health.toFixed(1)} ${i18next.t("hp")})</option>`
-            }
+        if (artifactLevel && artifactLevel !== "None") {
 
+            const i18nAtk = i18next.t("atk");
+            const i18nHp = i18next.t("hp");
+            const i18nDef = i18next.t("def");
+
+            for (let i = 30; i >= 0; i--) {
+                const stats = Artifact.getStats(artifactName, i);
+
+                const statParts = [];
+                if (stats.attack !== undefined) {
+                    statParts.push(`${stats.attack.toFixed(1)} ${i18nAtk}`);
+                }
+                if (stats.health !== undefined) {
+                    statParts.push(`${stats.health.toFixed(1)} ${i18nHp}`);
+                }
+                if (stats.defense !== undefined) {
+                    statParts.push(`${stats.defense.toFixed(1)} ${i18nDef}`);
+                }
+
+                const selected = artifactLevel == i ? "selected" : "";
+                html += `<option value="${i}" ${selected}>${i} - (${statParts.join(', ')})</option>`;
+            }
         }
     }
 
@@ -1983,7 +2017,7 @@ function getEeEnhanceHtml(hero, ee) {
 
 function getStatOptionsHtml(stat) {
     const type = stat ? stat.type : null;
-    return  `
+    return `
 <option value="None"></option>
 <option value="AttackPercent" ${type == "AttackPercent" ? "selected" : ""}>${i18next.t("Attack %")}</option>
 <option value="Attack" ${type == "Attack" ? "selected" : ""}>${i18next.t("Attack")}</option>
@@ -2001,7 +2035,7 @@ function getStatOptionsHtml(stat) {
 
 function getGearTypeOptionsHtml(item) {
     const gear = item.gear;
-    return  `
+    return `
 <option value="None"></option>
 <option value="Weapon" ${gear == "Weapon" ? "selected" : ""}>${i18next.t("Weapon")}</option>
 <option value="Helmet" ${gear == "Helmet" ? "selected" : ""}>${i18next.t("Helmet")}</option>
@@ -2014,7 +2048,7 @@ function getGearTypeOptionsHtml(item) {
 
 function getGearSetOptionsHtml(item) {
     const set = item.set;
-    return  `
+    return `
 <option value="None"></option>
 <option value="SpeedSet" ${set == "SpeedSet" ? "selected" : ""}>${i18next.t("Speed")}</option>
 <option value="AttackSet" ${set == "AttackSet" ? "selected" : ""}>${i18next.t("Attack")}</option>
@@ -2040,7 +2074,7 @@ function getGearSetOptionsHtml(item) {
 
 function getGearRankOptionsHtml(item) {
     const rank = item.rank;
-    return  `
+    return `
 <option value="None"></option>
 <option value="Epic" ${rank == "Epic" ? "selected" : ""}>${i18next.t("Epic")}</option>
 <option value="Heroic" ${rank == "Heroic" ? "selected" : ""}>${i18next.t("Heroic")}</option>
@@ -2052,7 +2086,7 @@ function getGearRankOptionsHtml(item) {
 
 function getGearMaterialOptionsHtml(item) {
     const material = item.material;
-    return  `
+    return `
 <option value="None">${i18next.t("None")}</option>
 <option value="Hunt" ${material == "Hunt" ? "selected" : ""}>${i18next.t("Hunt")}</option>
 <option value="Conversion" ${material == "Conversion" ? "selected" : ""}>${i18next.t("Conversion")}</option>

@@ -1,18 +1,19 @@
 package com.fribbels.model;
 
+import java.util.List;
+
 import com.fribbels.enums.Gear;
 import com.fribbels.enums.Material;
 import com.fribbels.enums.Rank;
 import com.fribbels.enums.Set;
 import com.google.gson.Gson;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.With;
-
-import java.util.List;
 
 @Builder
 @Getter
@@ -76,7 +77,7 @@ public class Item {
     }
 
     public int getHash() {
-        final HashItem hashItem = new HashItem(gear, rank, set, 0, level, main, augmentedStats);
+        final HashItem hashItem = new HashItem(this.gear, this.rank, this.set, 0, this.level, this.main, this.augmentedStats);
         return hashItem.hashCode();
     }
 }

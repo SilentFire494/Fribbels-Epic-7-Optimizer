@@ -8,17 +8,31 @@ module.exports = {
     getStats: (name, level) => {
         const allData = HeroData.getAllArtifactData();
         const artifact = allData[name];
-        const baseHealth = artifact.stats.health;
-        const baseAttack = artifact.stats.attack;
+        const baseHealth = artifact?.stats.health || 0;
+        const baseAttack = artifact?.stats.attack || 0;
+        const baseDefense = artifact?.stats.defense || 0;
         const maxHealth = baseHealth * 13;
         const maxAttack = baseAttack * 13;
+        const maxDefense = baseDefense * 13;
 
         const leveledHealth = (maxHealth - baseHealth) * (level/30) + baseHealth;
         const leveledAttack = (maxAttack - baseAttack) * (level/30) + baseAttack;
+        const leveledDefense = (maxDefense - baseDefense) * (level/30) + baseDefense;
 
-        return {
-            health: Utils.round10ths(leveledHealth),
-            attack: Utils.round10ths(leveledAttack)
+        result = {};
+
+        if (leveledHealth > 0) {
+            result.health = Utils.round10ths(leveledHealth);
         }
+
+        if (leveledAttack > 0) {
+            result.attack = Utils.round10ths(leveledAttack);
+        }
+
+        if (leveledDefense > 0) {
+            result.defense = Utils.round10ths(leveledDefense);
+        }
+
+        return result;
     },
 }

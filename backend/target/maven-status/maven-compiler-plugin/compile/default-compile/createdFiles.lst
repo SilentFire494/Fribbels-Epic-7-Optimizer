@@ -47,6 +47,7 @@ com\fribbels\model\SkillData.class
 com\fribbels\request\BaseStatsRequest.class
 com\fribbels\response\Response.class
 com\fribbels\model\ArtifactStats$ArtifactStatsBuilder.class
+com\fribbels\core\Sorter$1.class
 com\fribbels\model\SingleSkillOptions.class
 com\fribbels\model\Mod.class
 com\fribbels\request\IdRequest$IdRequestBuilder.class
@@ -81,6 +82,7 @@ com\fribbels\request\MergeRequest.class
 com\fribbels\response\OcrResponse.class
 com\fribbels\request\HeroesRequest$HeroesRequestBuilder.class
 com\fribbels\response\OcrResponse$OcrResponseBuilder.class
+com\fribbels\core\StatCalculator$StatIndex.class
 com\fribbels\enums\StatType.class
 com\fribbels\request\IdsRequest.class
 com\fribbels\db\ArtifactStatsDb.class
@@ -96,6 +98,7 @@ com\fribbels\handler\HeroesRequestHandler.class
 com\fribbels\model\PassesContainer.class
 com\fribbels\request\AllDataResponse$AllDataResponseBuilder.class
 com\fribbels\request\BonusStatsRequest$BonusStatsRequestBuilder.class
+com\fribbels\core\StatCalculator$1.class
 com\fribbels\handler\SystemRequestHandler.class
 com\fribbels\model\Hero$HeroBuilder.class
 com\fribbels\model\HeroStats$HeroStatsBuilder.class
@@ -111,6 +114,7 @@ com\fribbels\enums\Set.class
 com\fribbels\model\PassesContainer$PassesContainerBuilder.class
 com\fribbels\response\GetResultRowsResponse$GetResultRowsResponseBuilder.class
 com\fribbels\request\EquipItemsOnHeroRequest.class
+com\fribbels\core\StatCalculator$CalculationConfig.class
 com\fribbels\enums\Gear.class
 com\fribbels\model\Item.class
 com\fribbels\response\GetInProgressResponse.class

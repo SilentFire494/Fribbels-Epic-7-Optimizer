@@ -2,17 +2,18 @@ package com.fribbels.model;
 
 import com.fribbels.enums.StatType;
 import com.google.gson.annotations.SerializedName;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Wither;
+import lombok.With;
 
 @Getter
 @Setter
-@Wither
+@With
 @Builder
 @ToString
 @AllArgsConstructor

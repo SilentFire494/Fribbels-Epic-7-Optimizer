@@ -514,7 +514,7 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
 
     public void fillAccs(final StatCalculator statCalculator, final Item[] items, final HeroStats base, final boolean useReforgeStats) {
         for (int i = 0; i < items.length; i++) {
-            items[i].setTempStatAccArr(statCalculator.getNewStatAccumulatorArr(base, items[i], useReforgeStats));
+            items[i].setTempStatAccArr(statCalculator.createStatAccumulator(base, items[i], useReforgeStats));
         }
     }
 
@@ -648,7 +648,7 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
 
         System.out.println("OUTPUTSTART");
 
-        statCalculator.setBaseValues(base, request.hero);
+        statCalculator.calculateBaseValues(base, request.hero);
 
         final float[] flattenedWeaponAccs = flattenAccArrs(allweapons);
         final float[] flattenedHelmetAccs = flattenAccArrs(allhelmets);
@@ -690,11 +690,11 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
             bonusMaxDef = 1 + base.getBonusStats().getBonusMaxDefPercent() / 100f + hero.getFinalDefMultiplier() / 100;
         }
 
-        final float penSetDmgBonus = (StatCalculator.getSettingPenDefense() / 300f + 1)
-                / (0.00283333f * StatCalculator.getSettingPenDefense() + 1);
+        final float penSetDmgBonus = (StatCalculator.getPenDefenseValue() / 300f + 1)
+                / (0.00283333f * StatCalculator.getPenDefenseValue() + 1);
 
-        final int SETTING_RAGE_SET = StatCalculator.isSettingRageSet() ? 1 : 0;
-        final int SETTING_PEN_SET = StatCalculator.isSettingPenSet() ? 1 : 0;
+        final int SETTING_RAGE_SET = StatCalculator.isRageSetEnabled() ? 1 : 0;
+        final int SETTING_PEN_SET = StatCalculator.isPenSetEnabled() ? 1 : 0;
 
         final long maxPerms = wSize * hSize * aSize * nSize * rSize * bSize;
 
@@ -725,7 +725,7 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
                     speedSetBonus,
                     revengeSetBonus,
                     penSetDmgBonus,
-                    StatCalculator.getSettingPenDefense(),
+                    StatCalculator.getPenDefenseValue(),
                     bonusMaxAtk,
                     bonusMaxDef,
                     bonusMaxHp,
@@ -1024,7 +1024,6 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
                                                     alreadyEquipped,
                                                     priority);
                                             searchedCounter.getAndIncrement();
-                                            // final boolean passesFilter = true;
 
                                             final boolean passesFilter = passesFilter(result, request, collectedSets);
                                             result.setSets(collectedSets);
