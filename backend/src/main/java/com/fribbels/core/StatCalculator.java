@@ -25,7 +25,6 @@ public class StatCalculator {
             this.penDefenseValue = penDefenseValue;
         }
 
-        // Getters and setters
         public boolean isRageSetEnabled() {
             return this.rageSetEnabled;
         }
@@ -85,14 +84,12 @@ public class StatCalculator {
         Objects.requireNonNull(base, "Base stats cannot be null");
         Objects.requireNonNull(hero, "Hero cannot be null");
 
-        // 1. Calculate set bonuses
         this.attackSetMultiplier = this.calculateSetBonus(base.getAtk(), 0.45f);
         this.healthSetMultiplier = this.calculateSetBonus(base.getHp(), 0.20f);
         this.defenseSetMultiplier = this.calculateSetBonus(base.getDef(), 0.20f);
         this.speedSetMultiplier = this.calculateSetBonus(base.getSpd(), 0.25f);
         this.revengeSetMultiplier = this.calculateSetBonus(base.getSpd(), 0.12f);
 
-        // 2. Calculate base bonuses
         this.baseAttackBonus = this.calculateStatWithBonuses(
                 base.getAtk(),
                 hero.getBonusAtkPercent() + hero.getAeiAtkPercent(),
@@ -108,7 +105,6 @@ public class StatCalculator {
                 hero.getBonusDefPercent() + hero.getAeiDefPercent(),
                 hero.getBonusDef() + hero.getAeiDef());
 
-        // 3. Calculate max multipliers
         final float baseAtkMultiplier = hero.getFinalAtkMultiplier() / 100f;
         final float baseHpMultiplier = hero.getFinalHpMultiplier() / 100f;
         final float baseDefMultiplier = hero.getFinalDefMultiplier() / 100f;
@@ -123,7 +119,6 @@ public class StatCalculator {
             this.maxDefenseMultiplier = 1 + base.getBonusStats().getBonusMaxDefPercent() / 100f + baseDefMultiplier;
         }
 
-        // 4. Calculate penetration damage bonus
         this.penetrationDamageBonus = this.calculatePenetrationBonus(config.getPenDefenseValue());
     }
 

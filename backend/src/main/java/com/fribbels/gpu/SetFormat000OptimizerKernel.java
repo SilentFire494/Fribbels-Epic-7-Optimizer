@@ -269,9 +269,6 @@ public class SetFormat000OptimizerKernel extends GpuOptimizerKernel {
         final float defensiveValue = 1f/(this.targetDefense*this.max(0, realPenetration)/300f + 1f);
         final int value = (int)(offensiveValue * defensiveValue + supportValue + extraDamage);
 
-        //        System.out.println("S" + (s+1) + " " + value + " " + (hitTypeMultis) + " " + (1.871f * m.getPow()[s]));
-        //        System.out.println(m);
-
         return value;
     }
 }

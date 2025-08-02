@@ -2,6 +2,7 @@ package com.fribbels.model;
 
 import com.fribbels.enums.StatType;
 import com.google.gson.Gson;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,82 +20,78 @@ public class Mod {
     private Integer value;
     private Integer index;
 
+    @Override
     public String toString() {
-//        System.out.println(new Gson().toJson(this));
         return new Gson().toJson(this);
     }
 
     public void modifyAugmentedStats(final AugmentedStats stats) {
-        // Clear old stat
-        if (originalType == StatType.ATTACK) {
+        if (this.originalType == StatType.ATTACK) {
             stats.setAttack(0);
         }
-        if (originalType == StatType.ATTACKPERCENT) {
+        if (this.originalType == StatType.ATTACKPERCENT) {
             stats.setAttackPercent(0);
         }
-        if (originalType == StatType.CRITRATE) {
+        if (this.originalType == StatType.CRITRATE) {
             stats.setCritRate(0);
         }
-        if (originalType == StatType.CRITDAMAGE) {
+        if (this.originalType == StatType.CRITDAMAGE) {
             stats.setCritDamage(0);
         }
-        if (originalType == StatType.DEFENSE) {
+        if (this.originalType == StatType.DEFENSE) {
             stats.setDefense(0);
         }
-        if (originalType == StatType.DEFENSEPERCENT) {
+        if (this.originalType == StatType.DEFENSEPERCENT) {
             stats.setDefensePercent(0);
         }
-        if (originalType == StatType.EFFECTRESISTANCE) {
+        if (this.originalType == StatType.EFFECTRESISTANCE) {
             stats.setEffectResistance(0);
         }
-        if (originalType == StatType.EFFECTIVENESS) {
+        if (this.originalType == StatType.EFFECTIVENESS) {
             stats.setEffectiveness(0);
         }
-        if (originalType == StatType.HEALTH) {
+        if (this.originalType == StatType.HEALTH) {
             stats.setHealth(0);
         }
-        if (originalType == StatType.HEALTHPERCENT) {
+        if (this.originalType == StatType.HEALTHPERCENT) {
             stats.setHealthPercent(0);
         }
-        if (originalType == StatType.SPEED) {
+        if (this.originalType == StatType.SPEED) {
             stats.setSpeed(0);
         }
 
-        // New stats
-        if (type == StatType.ATTACK) {
-            stats.setAttack(value);
+        if (this.type == StatType.ATTACK) {
+            stats.setAttack(this.value);
         }
-        if (type == StatType.ATTACKPERCENT) {
-            stats.setAttackPercent(value);
+        if (this.type == StatType.ATTACKPERCENT) {
+            stats.setAttackPercent(this.value);
         }
-        if (type == StatType.CRITRATE) {
-            stats.setCritRate(value);
+        if (this.type == StatType.CRITRATE) {
+            stats.setCritRate(this.value);
         }
-        if (type == StatType.CRITDAMAGE) {
-            stats.setCritDamage(value);
+        if (this.type == StatType.CRITDAMAGE) {
+            stats.setCritDamage(this.value);
         }
-        if (type == StatType.DEFENSE) {
-            stats.setDefense(value);
+        if (this.type == StatType.DEFENSE) {
+            stats.setDefense(this.value);
         }
-        if (type == StatType.DEFENSEPERCENT) {
-            stats.setDefensePercent(value);
+        if (this.type == StatType.DEFENSEPERCENT) {
+            stats.setDefensePercent(this.value);
         }
-        if (type == StatType.EFFECTRESISTANCE) {
-            stats.setEffectResistance(value);
+        if (this.type == StatType.EFFECTRESISTANCE) {
+            stats.setEffectResistance(this.value);
         }
-        if (type == StatType.EFFECTIVENESS) {
-            stats.setEffectiveness(value);
+        if (this.type == StatType.EFFECTIVENESS) {
+            stats.setEffectiveness(this.value);
         }
-        if (type == StatType.HEALTH) {
-            stats.setHealth(value);
+        if (this.type == StatType.HEALTH) {
+            stats.setHealth(this.value);
         }
-        if (type == StatType.HEALTHPERCENT) {
-            stats.setHealthPercent(value);
+        if (this.type == StatType.HEALTHPERCENT) {
+            stats.setHealthPercent(this.value);
         }
-        if (type == StatType.SPEED) {
-            stats.setSpeed(value);
+        if (this.type == StatType.SPEED) {
+            stats.setSpeed(this.value);
         }
-
-//        System.out.println("Finished modding, " + stats);
     }
 }

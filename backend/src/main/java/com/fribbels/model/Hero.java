@@ -22,7 +22,6 @@ import lombok.With;
 @Setter
 @With
 @Builder
-// @AllArgsConstructor
 @ToString
 public class Hero {
 

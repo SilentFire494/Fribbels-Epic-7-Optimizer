@@ -169,7 +169,6 @@ public class HeroesRequestHandler extends RequestHandler implements HttpHandler 
 
     boolean addStatsToBuild(final Hero hero, final HeroStats baseStats, final HeroStats build,
             final boolean useReforgeStats) {
-        // Update artifact
         final ArtifactStats artifactStats = this.artifactStatsDb.getArtifactStats(hero.getArtifactName(),
                 this.parseArtifactLevel(hero.getArtifactLevel()));
 
@@ -423,7 +422,6 @@ public class HeroesRequestHandler extends RequestHandler implements HttpHandler 
     private void addStatsToHero(final Hero hero, final boolean useReforgeStats) {
         final HeroStats baseStats = this.baseStatsDb.getBaseStatsByName(hero.getName(), hero.getStars());
 
-        // Update artifact
         final ArtifactStats artifactStats = this.artifactStatsDb.getArtifactStats(hero.getArtifactName(),
                 this.parseArtifactLevel(hero.getArtifactLevel()));
 
@@ -431,7 +429,6 @@ public class HeroesRequestHandler extends RequestHandler implements HttpHandler 
         hero.setArtifactAttack(artifactStats.getAttack());
         hero.setArtifactDefense(artifactStats.getDefense());
 
-        // Update equipment
         final Map<Gear, Item> equipment = hero.getEquipment();
         equipment.entrySet()
                 .stream()
@@ -520,7 +517,6 @@ public class HeroesRequestHandler extends RequestHandler implements HttpHandler 
         if (hero == null)
             return "";
 
-        // Unlink hero from equipments
         if (hero.getEquipment() != null) {
             final Item[] equipment = hero.getEquipment().values().toArray(new Item[0]);
             for (int i = 0; i < equipment.length; i++) {
@@ -542,7 +538,6 @@ public class HeroesRequestHandler extends RequestHandler implements HttpHandler 
             hero.setEquipment(new EnumMap<>(Gear.class));
         }
 
-        // Remove the hero from db
         final List<Hero> heroes = this.heroDb.getAllHeroes();
         final List<Hero> newHeroes = heroes.stream()
                 .filter(x -> !x.getId().equals(request.getId()))
@@ -565,7 +560,6 @@ public class HeroesRequestHandler extends RequestHandler implements HttpHandler 
             return "";
 
         if (hero.getEquipment() != null) {
-            // Unlink the gear from the hero
             final Item[] equipment = hero.getEquipment().values().toArray(new Item[0]);
             for (int i = 0; i < equipment.length; i++) {
                 final Item previousItem = equipment[i];

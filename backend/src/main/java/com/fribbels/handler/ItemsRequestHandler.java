@@ -112,14 +112,12 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
     private String mergeItems(final MergeRequest request) {
         final List<Item> existingItems = this.itemDb.getAllItems();
 
-        // Filter new items with enhance >= enhanceLimit
         final List<Item> newItems = request.getItems().stream()
                 .filter(x -> x.getEnhance() >= request.getEnhanceLimit())
                 .toList();
 
         final Map<String, Item> itemsByIngameId = new HashMap<>();
 
-        // Populate map with existing items by ingameId
         for (final Item item : existingItems) {
             final String ingameId = item.getIngameId();
             if (ingameId != null) {
@@ -127,16 +125,13 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
             }
         }
 
-        // Iterate over new items and either update or insert
         for (final Item newItem : newItems) {
             final String ingameId = newItem.getIngameId();
             if (ingameId != null) {
                 final Item existingItem = itemsByIngameId.get(ingameId);
                 if (existingItem != null) {
-                    // Replace existing item (update logic)
                     this.itemDb.replaceItems(newItem);
                 } else {
-                    // Insert new item
                     this.itemDb.addItem(newItem);
                 }
             }
@@ -412,7 +407,6 @@ public class ItemsRequestHandler extends RequestHandler implements HttpHandler {
     private void augmentItemData(final List<Item> items) {
         final Map<Integer, List<Item>> itemsByHash = new HashMap<>();
 
-        // Note down matching items
         for (final Item item : items) {
             item.setDuplicateId("");
             final int hash = item.getHash();

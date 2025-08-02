@@ -323,8 +323,6 @@ public class GpuOptimizerKernel extends Kernel {
         this.inputMinPriorityLimit = request.inputMinPriorityLimit;
         this.inputMaxPriorityLimit = request.inputMaxPriorityLimit;
 
-//        s1SelfSpdScaling = hero
-
         this.max = max;
         this.boolArr = request.boolArr;
         this.setPermutationIndicesPlusOne = request.setPermutationIndicesPlusOne;
@@ -601,23 +599,6 @@ public class GpuOptimizerKernel extends Kernel {
 
 // {1.871 * [(ATK)(Atkmod)(Rate)+(FlatMod)]} * (pow!)(EnhanceMod)(HitTypeMod)(ElementMod)(DamageUpMod)(TargetDebuffMod)
             // flatmod
-
-//            @Constant final float s1SelfHpScaling = 0;
-//            @Constant final float s1SelfAtkScaling = 0;
-//            @Constant final float s1SelfDefScaling = 0;
-//            @Constant final float s1SelfSpdScaling = 0;
-
-//            @Constant final float s1ConstantValue = 0;
-//            @Constant final float s1SelfAtkConstantValue = 0;
-//            @Constant final float s1ConditionalIncreasedValue = 0;
-//            @Constant final float s1DefDiffPen = 0;
-//            @Constant final float s1DefDiffPenMax = 0;
-//            @Constant final float s1AtkDiffPen = 0;
-//            @Constant final float s1AtkDiffPenMax = 0;
-//            @Constant final float s1SpdDiffPen = 0;
-//            @Constant final float s1SpdDiffPenMax = 0;
-//            @Constant final float s1Penetration = 0;
-//           x @Constant final float s1AtkIncrease = 0;
 
             final int score = (int) (wScore+hScore+aScore+nScore+rScore+bScore);
             final int priority = (int) (wPrio+hPrio+aPrio+nPrio+rPrio+bPrio);

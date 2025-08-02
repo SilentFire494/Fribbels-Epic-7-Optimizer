@@ -160,7 +160,6 @@ public class OptimizationRequest extends Request {
     private Integer inputEffPriority;
     private Integer inputResPriority;
 
-    // calculated fields
     public boolean[] boolArr;
     public int[] setPermutationIndicesPlusOne;
     public int[] setSolutionCounters;

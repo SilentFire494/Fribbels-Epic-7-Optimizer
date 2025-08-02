@@ -84,7 +84,6 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
     public static final int SET_COUNT = 18;
     public static final int ARG_COUNT = 17;
 
-    //
     private static final int SET_EXPONENTIAL = 34012224; // 16 ^ 6
 
     private boolean[] permutations = new boolean[SET_EXPONENTIAL];
@@ -1336,10 +1335,6 @@ public class OptimizationRequestHandler extends RequestHandler implements HttpHa
                             this.permutations[index1D] = true;
                             this.setPermutationIndicesPlusOne[index1D] = i + 1;
                         }
-                        // System.out.println(Arrays.toString(indicesInstance));
-                        // System.out.println(set1);
-                        // System.out.println(index1D);
-                        // System.out.println("----");
                     }
                 }
             }

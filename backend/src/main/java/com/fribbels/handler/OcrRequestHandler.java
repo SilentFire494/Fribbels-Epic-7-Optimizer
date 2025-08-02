@@ -145,13 +145,10 @@ public class OcrRequestHandler extends RequestHandler implements HttpHandler {
             main = this.readMain();
         }
 
-        // Get OCR result
-
         final OcrResponse ocrResponse = OcrResponse.builder()
                 .title(title)
                 .main(main)
                 .set(set.getName())
-                // .hero(hero)
                 .build();
 
         System.out.println(ocrResponse);

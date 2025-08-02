@@ -26,7 +26,6 @@ public class ItemDb {
     }
 
     public void addItems(final List<Item> newItems) {
-        // this.items = new ArrayList<>(this.items);
         final List<Item> validItems = newItems.stream()
                 .filter(this::isValid)
                 .map(this::calculateWss)
@@ -35,7 +34,6 @@ public class ItemDb {
     }
 
     public void addItem(final Item newItem) {
-        // this.items = new ArrayList<>(this.items);
         if (this.isValid(newItem)) {
             this.items.add(this.calculateWss(newItem));
         }
@@ -51,29 +49,19 @@ public class ItemDb {
     }
 
     public void replaceItems(final Item newItem) {
-        // Create new mutable list
-        final List<Item> updatedItems = new ArrayList<>(this.items.size()); // Optional: presize
+        final List<Item> updatedItems = new ArrayList<>(this.items.size());
 
-        // Add all items except the one being replaced
         this.items.stream()
                 .filter(item -> !item.getId().equals(newItem.getId()))
                 .forEach(updatedItems::add);
 
-        // Add the new item
         updatedItems.add(newItem);
 
-        // Apply filters and calculations
         this.items = updatedItems.stream()
                 .filter(this::isValid)
                 .map(this::calculateWss)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
-
-    // public void replaceItems(final Item newItem) {
-    // this.items = Stream.concat(this.items.stream().filter(item ->
-    // !item.getId().equals(newItem.getId())),
-    // Stream.of(newItem)).filter(this::isValid).map(this::calculateWss).toList();
-    // }
 
     public List<Item> getAllItems() {
         return this.items;
